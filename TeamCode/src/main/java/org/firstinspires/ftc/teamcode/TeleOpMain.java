@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-
 import android.util.Log;
+import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -13,14 +13,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotControlMechanum;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.TempUnit;
 
-
 import java.io.IOException;
-
+import java.util.List;
 
 @TeleOp
 public class TeleOpMain extends LinearOpMode {
@@ -39,9 +39,6 @@ public class TeleOpMain extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        telemetry.addData("Robot", "Initialized successfully");
-        telemetry.update();
-
         // waitForStart();
 
         // do something in init mode?
@@ -53,8 +50,7 @@ public class TeleOpMain extends LinearOpMode {
         telemetry.addData("Robot", "running teleop.. press (Y) For telemetry");
         telemetry.update();
 
-        //Main Loop
-        //set lights for slow mode
+        //Initialize remaining variables
         double loopTimeStart = 0;
         boolean slowMode = true;
         boolean showTelemetry = false;
@@ -64,9 +60,26 @@ public class TeleOpMain extends LinearOpMode {
         Gamepad currentGamepad2 = new Gamepad();
         Gamepad previousGamepad1 = new Gamepad();
         Gamepad previousGamepad2 = new Gamepad();
-        ElapsedTime lastFourBarMove = new ElapsedTime();
-        ElapsedTime lastElevatorMove = new ElapsedTime();
 
+        //Set front camera up for AcmeTag
+        AprilTagProcessor aprilTagProcessor = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawTagID(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagOutline(true)
+                .build();
+        VisionPortal visionPortal = new VisionPortal.Builder()
+                .addProcessor(aprilTagProcessor)
+                .setCamera(theHardwareMap.frontCamera)
+                .setCameraResolution(new Size(640, 480))
+                .setStreamFormat(VisionPortal.StreamFormat.YUY2)
+                .enableLiveView(true)
+                .setAutoStopLiveView(true)
+                .build();
+
+
+
+        //Main Loop
         while (opModeIsActive()) {
 
             loopTimeStart = System.currentTimeMillis();
@@ -84,6 +97,7 @@ public class TeleOpMain extends LinearOpMode {
             //double strafe = gamepad1.left_stick_x;
             double twist = gamepad1.right_stick_x;
 
+            //Speed values for slow mode
             if (slowMode) {
                 drive *= 0.5;
                 strafe *= 0.5;
@@ -106,6 +120,21 @@ public class TeleOpMain extends LinearOpMode {
                 //lights.switchLight(Light.ALL_LEFT, LightMode.GREEN);
             }
 
+            //Check for detections
+            List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
+            //loop through the AprilTag detections to see what we found
+            for (AprilTagDetection detection : currentDetections){
+                //If we found somethin, display the data for it
+                if (detection.ftcPose != null) {
+                    telemetry.addData("Tag Bearing", detection.ftcPose.bearing);
+                    telemetry.addData("Tag Range", detection.ftcPose.range);
+                    //telemetry.addData("Tag Pitch", detection.ftcPose.pitch);
+                    //telemetry.addData("Tag Roll", detection.ftcPose.roll);
+                    telemetry.addData("Tag Yaw", detection.ftcPose.yaw);
+                }
+            }
+            telemetry.update();
+
             //show telemetry
             if (currentGamepad1.y && !previousGamepad1.y) {
                 showTelemetry = !showTelemetry;
@@ -118,16 +147,16 @@ public class TeleOpMain extends LinearOpMode {
                 telemetry.addData("Control Right Y",currentGamepad1.right_stick_y);
                 telemetry.addData("Bumper Left",currentGamepad1.left_bumper);
                 telemetry.addData("Bumper Right",currentGamepad1.right_bumper);
+                telemetry.addData("Slow Mode",slowMode);
+                telemetry.addData("Camera State",visionPortal.getCameraState());
                 //telemetry.addData("ch (mA)", theHardwareMap.controlHub.getCurrent(CurrentUnit.AMPS));
                 //telemetry.addData("eh (mA)", theHardwareMap.expansionHub.getCurrent(CurrentUnit.AMPS));
                 //telemetry.addData("ch temp", theHardwareMap.controlHub.getTemperature(TempUnit.FARENHEIT));
                 //telemetry.addData("eh temp", theHardwareMap.expansionHub.getTemperature(TempUnit.FARENHEIT));
             }
 
-            telemetry.addData("looptime", System.currentTimeMillis() - loopTimeStart);
-            telemetry.update();
-
-
+            //telemetry.addData("looptime", System.currentTimeMillis() - loopTimeStart);
+            //telemetry.update();
         }
 
         telemetry.addData("Status", "Stopped");

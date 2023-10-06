@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.RobotHardwareMap;
          */
         public void initialize(){
             robotHardwareMap.backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            robotHardwareMap.backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            robotHardwareMap.backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             robotHardwareMap.frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             robotHardwareMap.frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         }
