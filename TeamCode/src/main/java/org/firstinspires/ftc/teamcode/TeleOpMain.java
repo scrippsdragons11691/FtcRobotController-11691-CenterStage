@@ -10,11 +10,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import org.firstinspires.ftc.teamcode.hardware.RobotControlLights;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlMechanum;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.teamcode.hardware.Light;
+import org.firstinspires.ftc.teamcode.hardware.LightMode;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.TempUnit;
@@ -33,11 +37,15 @@ public class TeleOpMain extends LinearOpMode {
         RobotHardwareMap theHardwareMap = new RobotHardwareMap(this.hardwareMap, this);
         theHardwareMap.initialize();
 
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+
         RobotControlMechanum robotDrive = new RobotControlMechanum(theHardwareMap, this);
         robotDrive.initialize();
 
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+        RobotControlLights lights = new RobotControlLights(theHardwareMap, this);
+        lights.initialize();
+
 
         // waitForStart();
 
@@ -50,10 +58,14 @@ public class TeleOpMain extends LinearOpMode {
         telemetry.addData("Robot", "running teleop.. press (Y) For telemetry");
         telemetry.update();
 
+        lights.switchLight(Light.ALL, LightMode.OFF);
+
         //Initialize remaining variables
         double loopTimeStart = 0;
         boolean slowMode = true;
+        lights.switchLight(Light.LED2, LightMode.GREEN); //Initial light for slow speed
         boolean showTelemetry = false;
+
 
         //create some gamepads to look at debouncing
         Gamepad currentGamepad1 = new Gamepad();
@@ -76,8 +88,6 @@ public class TeleOpMain extends LinearOpMode {
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .build();
-
-
 
         //Main Loop
         while (opModeIsActive()) {
@@ -114,23 +124,44 @@ public class TeleOpMain extends LinearOpMode {
             //slow mode
             if (currentGamepad1.left_bumper && !previousGamepad1.left_bumper) {
                 slowMode = true;
-                //lights.switchLight(Light.ALL_LEFT, LightMode.YELLOW);
+                lights.switchLight(Light.LED2, LightMode.GREEN);
             } else if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
                 slowMode = false;
-                //lights.switchLight(Light.ALL_LEFT, LightMode.GREEN);
+                lights.switchLight(Light.LED2, LightMode.YELLOW);
             }
 
             //Check for detections
+            lights.switchLight(Light.LED1, LightMode.OFF);
+            telemetry.clear();
+
             List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
+
             //loop through the AprilTag detections to see what we found
             for (AprilTagDetection detection : currentDetections){
-                //If we found somethin, display the data for it
+                //update the lights that we found one
+                lights.switchLight(Light.LED1, LightMode.GREEN);
+
+                //If we found something, display the data for it
                 if (detection.ftcPose != null) {
                     telemetry.addData("Tag Bearing", detection.ftcPose.bearing);
                     telemetry.addData("Tag Range", detection.ftcPose.range);
-                    //telemetry.addData("Tag Pitch", detection.ftcPose.pitch);
-                    //telemetry.addData("Tag Roll", detection.ftcPose.roll);
                     telemetry.addData("Tag Yaw", detection.ftcPose.yaw);
+                    telemetry.addData("ID",detection.id);
+
+                }
+                //If we detect a specific apriltag and they are pressing X, then we are twisting to that angle
+                if (detection.id == 5 && currentGamepad1.x) {
+                    telemetry.addData("Driveauto",detection.id);
+                    double twistAmount = 0.25;
+                    //adjust the twist based on the amount of yaw
+                    //tweak the color for 5 and or 2
+                    //add support for finding 2
+                    //test other buttons for ease of use
+
+                    if (detection.ftcPose.yaw >= 0) {
+                        twistAmount = twistAmount * -1;
+                    }
+                    robotDrive.teleOpMechanum(0,0, twistAmount);
                 }
             }
             telemetry.update();
@@ -140,7 +171,8 @@ public class TeleOpMain extends LinearOpMode {
                 showTelemetry = !showTelemetry;
             }
 
-            if (showTelemetry) {
+            //if (showTelemetry) {
+            if (1 == 0){
                 telemetry.addData("Control1 Left X",currentGamepad1.left_stick_x);
                 telemetry.addData("Control1 Left Y",currentGamepad1.left_stick_y);
                 telemetry.addData("Control1 Right X",currentGamepad1.right_stick_x);

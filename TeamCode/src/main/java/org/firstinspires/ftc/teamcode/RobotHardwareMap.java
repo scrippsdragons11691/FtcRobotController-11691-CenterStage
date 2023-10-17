@@ -41,6 +41,11 @@ public class RobotHardwareMap {
     public DcMotorEx frontLeftMotor;
     public DcMotorEx frontRightMotor;
 
+    public DigitalChannel LED1Green;
+    public DigitalChannel LED1Red;
+    public DigitalChannel LED2Green;
+    public DigitalChannel LED2Red;
+
     //public ColorSensor elevatorColorSensor;
     //public DigitalChannel leftRedLED;
     //public DigitalChannel leftGreenLED;
@@ -88,6 +93,23 @@ public class RobotHardwareMap {
         frontLeftMotor = baseHMap.get(DcMotorEx.class, "FL");
         frontRightMotor = baseHMap.get(DcMotorEx.class, "FR");
 
+        try {
+            frontCamera = baseHMap.get(WebcamName.class, "Front camera");
+            opMode.telemetry.addData("frontCamera", "success ");
+        } catch (IllegalArgumentException iae){
+            opMode.telemetry.addData("frontCamera", iae.getMessage());
+        }
+
+        //LEDs
+        try {
+            LED1Green = baseHMap.get(DigitalChannel.class, "LED1green");
+            LED1Red = baseHMap.get(DigitalChannel.class, "LED1red");
+            LED2Green = baseHMap.get(DigitalChannel.class, "LED2green");
+            LED2Red = baseHMap.get(DigitalChannel.class, "LED2red");
+        } catch (IllegalArgumentException iae){
+            opMode.telemetry.addData("lights", iae.getMessage());
+        }
+
         // intakeMotor = baseHMap.get(DcMotor.class, "IntakeMotor");
 
         //try {
@@ -129,13 +151,6 @@ public class RobotHardwareMap {
         //} catch (IllegalArgumentException iae){
         //    opMode.telemetry.addData("coneDistance", iae.getMessage());
         //}
-
-        try {
-            frontCamera = baseHMap.get(WebcamName.class, "Front camera");
-            opMode.telemetry.addData("frontCamera", "success ");
-        } catch (IllegalArgumentException iae){
-            opMode.telemetry.addData("frontCamera", iae.getMessage());
-        }
 
         /*
         wristServo = hMap.get(Servo.class,"servo1" );
