@@ -66,7 +66,6 @@ public class TeleOpMain extends LinearOpMode {
         lights.switchLight(Light.LED2, LightMode.GREEN); //Initial light for slow speed
         boolean showTelemetry = false;
 
-
         //create some gamepads to look at debouncing
         Gamepad currentGamepad1 = new Gamepad();
         Gamepad currentGamepad2 = new Gamepad();
@@ -180,7 +179,7 @@ public class TeleOpMain extends LinearOpMode {
                 telemetry.addData("Bumper Left",currentGamepad1.left_bumper);
                 telemetry.addData("Bumper Right",currentGamepad1.right_bumper);
                 telemetry.addData("Slow Mode",slowMode);
-                telemetry.addData("Camera State",visionPortal.getCameraState());
+                //telemetry.addData("Camera State",visionPortal.getCameraState());
                 //telemetry.addData("ch (mA)", theHardwareMap.controlHub.getCurrent(CurrentUnit.AMPS));
                 //telemetry.addData("eh (mA)", theHardwareMap.expansionHub.getCurrent(CurrentUnit.AMPS));
                 //telemetry.addData("ch temp", theHardwareMap.controlHub.getTemperature(TempUnit.FARENHEIT));
