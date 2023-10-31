@@ -46,6 +46,9 @@ public class TeleOpMain extends LinearOpMode {
         RobotControlLights lights = new RobotControlLights(theHardwareMap, this);
         lights.initialize();
 
+        //Initial servo positions
+        theHardwareMap.servoClaw1.setPosition(0.8);
+        theHardwareMap.servoClaw2.setPosition(0.075);
 
         // waitForStart();
 
@@ -128,6 +131,37 @@ public class TeleOpMain extends LinearOpMode {
                 slowMode = false;
                 lights.switchLight(Light.LED2, LightMode.YELLOW);
             }
+
+            //Open/close claw1
+            telemetry.addData("Claw1 Position",theHardwareMap.servoClaw1.getPosition());
+
+            if (currentGamepad2.a)
+            {
+                theHardwareMap.servoClaw1.setPosition(0.8);
+                telemetry.addData("Claw1 Open",theHardwareMap.servoClaw1.getPosition());
+            }
+            else if (!currentGamepad2.a & previousGamepad2.a)
+            {
+                theHardwareMap.servoClaw1.setPosition(0.75);
+                telemetry.addData("Claw1 Close",theHardwareMap.servoClaw1.getPosition());
+            }
+
+            //Open/close claw2
+            telemetry.addData("Claw2 Position",theHardwareMap.servoClaw2.getPosition());
+
+            if (currentGamepad2.b)
+            {
+                theHardwareMap.servoClaw2.setPosition(0.06);
+                telemetry.addData("Claw2 Open",theHardwareMap.servoClaw2.getPosition());
+            }
+            else if (!currentGamepad2.b & previousGamepad2.b)
+            {
+                theHardwareMap.servoClaw2.setPosition(0.03);
+                telemetry.addData("Claw2 Close",theHardwareMap.servoClaw2.getPosition());
+            }
+
+
+            telemetry.update();
 
             //Check for detections
             lights.switchLight(Light.LED1, LightMode.OFF);
