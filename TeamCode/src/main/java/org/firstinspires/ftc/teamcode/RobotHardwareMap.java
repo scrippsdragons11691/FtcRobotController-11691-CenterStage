@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -42,6 +43,7 @@ public class RobotHardwareMap {
     public DcMotorEx frontLeftMotor;
     public DcMotorEx frontRightMotor;
     public DcMotorEx clawRotator;
+    public DcMotorEx armMotor;
     public DigitalChannel LED1Green;
     public DigitalChannel LED1Red;
     public DigitalChannel LED2Green;
@@ -85,6 +87,17 @@ public class RobotHardwareMap {
         frontRightMotor = baseHMap.get(DcMotorEx.class, "FR");
 
         clawRotator = baseHMap.get(DcMotorEx.class, "CR");
+        armMotor = baseHMap.get(DcMotorEx.class, "ARM");
+
+        clawRotator.setPower(0);
+        clawRotator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        clawRotator.setDirection(DcMotorSimple.Direction.FORWARD);
+        clawRotator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        armMotor.setPower(0);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Camera
         try {

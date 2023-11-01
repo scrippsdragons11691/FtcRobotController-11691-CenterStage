@@ -160,6 +160,29 @@ public class TeleOpMain extends LinearOpMode {
                 telemetry.addData("Claw2 Close",theHardwareMap.servoClaw2.getPosition());
             }
 
+            telemetry.update();
+
+            //Arm Up/Down
+            if (currentGamepad2.left_stick_y != 0)
+            {
+                theHardwareMap.armMotor.setPower(0.8 * currentGamepad2.left_stick_y);
+                telemetry.addData("armMotor Position",theHardwareMap.armMotor.getCurrentPosition());
+            } else {
+                theHardwareMap.armMotor.setPower(0);
+                telemetry.addData("armMotor Position",theHardwareMap.armMotor.getCurrentPosition());
+            }
+
+            //Flipper
+            if (currentGamepad2.right_stick_y !=0)
+            {
+                theHardwareMap.clawRotator.setPower((0.4 * currentGamepad2.right_stick_y));
+                telemetry.addData("Claw Rotator Position",theHardwareMap.clawRotator.getCurrentPosition());
+            }
+            else
+            {
+                theHardwareMap.clawRotator.setPower((0));
+                telemetry.addData("Claw Rotator Position",theHardwareMap.clawRotator.getCurrentPosition());
+            }
 
             telemetry.update();
 
