@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -160,35 +161,88 @@ public class TeleOpMain extends LinearOpMode {
                 telemetry.addData("Claw2 Close",theHardwareMap.servoClaw2.getPosition());
             }
 
-            telemetry.update();
+            //telemetry.update();
 
             //Arm Up/Down
             if (currentGamepad2.left_stick_y != 0)
             {
-                theHardwareMap.armMotor.setPower(0.8 * currentGamepad2.left_stick_y);
-                telemetry.addData("armMotor Position",theHardwareMap.armMotor.getCurrentPosition());
+                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                double leftStickY = -currentGamepad2.left_stick_y;
+                double currentPosition = theHardwareMap.armMotor.getCurrentPosition();
+                if (leftStickY > 0 && currentPosition < 400) {
+                    Log.d(TAG, "moving up  " + currentPosition + " " + leftStickY);
+                    theHardwareMap.armMotor.setPower(0.8 * leftStickY);
+                } else if (leftStickY < 0 && currentPosition > 500){
+                    Log.d(TAG, "moving up from other side  " + currentPosition + " " + leftStickY);
+                    theHardwareMap.armMotor.setPower(0.8 * leftStickY);
+                } else if (leftStickY < 0 && currentPosition < 400){
+                    Log.d(TAG, "slowing down  " + currentPosition + " " + leftStickY);
+                    theHardwareMap.armMotor.setPower(0.15);
+
+                } else {
+                    Log.d(TAG, "moving no power  " + currentPosition + " " + leftStickY);
+                    theHardwareMap.armMotor.setPower(0);
+                }
             } else {
-                theHardwareMap.armMotor.setPower(0);
-                telemetry.addData("armMotor Position",theHardwareMap.armMotor.getCurrentPosition());
+                //float code
+                double currentPosition = theHardwareMap.armMotor.getCurrentPosition();
+                if (currentPosition < 150 && currentPosition > 10) {
+                    theHardwareMap.armMotor.setPower(0.3);
+                    Log.d(TAG, "floating... " + currentPosition);
+                } else if (currentPosition > 500 && currentPosition < 800){
+                    theHardwareMap.armMotor.setPower(-0.3);
+                    Log.d(TAG, "negative floating..." + currentPosition);
+                } else {
+                    theHardwareMap.armMotor.setPower(0);
+                    Log.d(TAG, "stopped... " + currentPosition);
+                }
+
+            }
+            telemetry.addData("armMotor Position",theHardwareMap.armMotor.getCurrentPosition());
+            telemetry.addData("armMotor current", theHardwareMap.armMotor.getCurrent(CurrentUnit.MILLIAMPS));
+
+            if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
+                //-638 is maximum
+                //-440 is the 90 degree angle
+                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                theHardwareMap.armMotor.setTargetPosition(600);
+                //theHardwareMap.armMotor.setPower(0.8);
+                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            } else if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
+                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                theHardwareMap.armMotor.setTargetPosition(90);
+                //theHardwareMap.armMotor.setPower(0.8);
+                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            } else if (currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
+                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                theHardwareMap.armMotor.setTargetPosition(440);
+                //theHardwareMap.armMotor.setPower();
+                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             }
 
             //Flipper
             if (currentGamepad2.right_stick_y !=0)
             {
-                theHardwareMap.clawRotator.setPower((0.4 * currentGamepad2.right_stick_y));
-                telemetry.addData("Claw Rotator Position",theHardwareMap.clawRotator.getCurrentPosition());
+                telemetry.addData("CLAW PRESSED! ", currentGamepad2.right_stick_y);
+                theHardwareMap.clawRotator.setPower(0.4 * currentGamepad2.right_stick_y);
             }
             else
             {
                 theHardwareMap.clawRotator.setPower((0));
-                telemetry.addData("Claw Rotator Position",theHardwareMap.clawRotator.getCurrentPosition());
-            }
 
-            telemetry.update();
+            }
+            telemetry.addData("Claw Rotator Position",theHardwareMap.clawRotator.getCurrentPosition());
+
+
+
+            //telemetry.update();
 
             //Check for detections
             lights.switchLight(Light.LED1, LightMode.OFF);
-            telemetry.clear();
+            //telemetry.clear();
 
             List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
 
@@ -220,7 +274,7 @@ public class TeleOpMain extends LinearOpMode {
                     robotDrive.teleOpMechanum(0,0, twistAmount);
                 }
             }
-            telemetry.update();
+            //telemetry.update();
 
             //show telemetry
             if (currentGamepad1.y && !previousGamepad1.y) {
@@ -243,8 +297,8 @@ public class TeleOpMain extends LinearOpMode {
                 //telemetry.addData("eh temp", theHardwareMap.expansionHub.getTemperature(TempUnit.FARENHEIT));
             }
 
-            //telemetry.addData("looptime", System.currentTimeMillis() - loopTimeStart);
-            //telemetry.update();
+            telemetry.addData("looptime", System.currentTimeMillis() - loopTimeStart);
+            telemetry.update();
         }
 
         telemetry.addData("Status", "Stopped");

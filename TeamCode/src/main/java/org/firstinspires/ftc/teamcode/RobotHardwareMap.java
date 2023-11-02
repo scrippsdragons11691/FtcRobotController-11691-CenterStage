@@ -90,13 +90,15 @@ public class RobotHardwareMap {
         armMotor = baseHMap.get(DcMotorEx.class, "ARM");
 
         clawRotator.setPower(0);
+        clawRotator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         clawRotator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         clawRotator.setDirection(DcMotorSimple.Direction.FORWARD);
         clawRotator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         armMotor.setPower(0);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Camera
