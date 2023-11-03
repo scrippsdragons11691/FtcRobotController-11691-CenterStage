@@ -38,7 +38,7 @@ public class RobotControlMechanum {
      */
     public void initialize(){
         robotHardwareMap.backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardwareMap.backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardwareMap.backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD); //on bucky this is reverse
         robotHardwareMap.frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardwareMap.frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }

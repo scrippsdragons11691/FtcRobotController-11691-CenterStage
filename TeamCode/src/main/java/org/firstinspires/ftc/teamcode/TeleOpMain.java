@@ -48,8 +48,8 @@ public class TeleOpMain extends LinearOpMode {
         lights.initialize();
 
         //Initial servo positions
-        theHardwareMap.servoClaw1.setPosition(0.8);
-        theHardwareMap.servoClaw2.setPosition(0.075);
+        //theHardwareMap.servoClaw1.setPosition(0.8);
+        //theHardwareMap.servoClaw2.setPosition(0.075);
 
         // waitForStart();
 
@@ -92,6 +92,7 @@ public class TeleOpMain extends LinearOpMode {
                 .setAutoStopLiveView(true)
                 .build();
 
+        double currentClaw = 0.8;
         //Main Loop
         while (opModeIsActive()) {
 
@@ -136,12 +137,12 @@ public class TeleOpMain extends LinearOpMode {
             //Open/close claw1
             telemetry.addData("Claw1 Position",theHardwareMap.servoClaw1.getPosition());
 
-            if (currentGamepad2.a)
+            if (currentGamepad2.left_bumper)
             {
-                theHardwareMap.servoClaw1.setPosition(0.8);
+                theHardwareMap.servoClaw1.setPosition(0.9);
                 telemetry.addData("Claw1 Open",theHardwareMap.servoClaw1.getPosition());
             }
-            else if (!currentGamepad2.a & previousGamepad2.a)
+            else if (!currentGamepad2.left_bumper & previousGamepad2.left_bumper)
             {
                 theHardwareMap.servoClaw1.setPosition(0.75);
                 telemetry.addData("Claw1 Close",theHardwareMap.servoClaw1.getPosition());
@@ -150,16 +151,24 @@ public class TeleOpMain extends LinearOpMode {
             //Open/close claw2
             telemetry.addData("Claw2 Position",theHardwareMap.servoClaw2.getPosition());
 
-            if (currentGamepad2.b)
+            if (currentGamepad2.right_bumper)
             {
-                theHardwareMap.servoClaw2.setPosition(0.06);
+                theHardwareMap.servoClaw2.setPosition(0.1);
                 telemetry.addData("Claw2 Open",theHardwareMap.servoClaw2.getPosition());
             }
-            else if (!currentGamepad2.b & previousGamepad2.b)
+            else if (!currentGamepad2.right_bumper & previousGamepad2.right_bumper)
             {
                 theHardwareMap.servoClaw2.setPosition(0.03);
                 telemetry.addData("Claw2 Close",theHardwareMap.servoClaw2.getPosition());
             }
+
+            /*if (currentGamepad2.y && previousGamepad2.y){
+                currentClaw += 0.05;
+                theHardwareMap.servoClaw2.setPosition(currentClaw);
+            } else if (currentGamepad2.x && previousGamepad2.x){
+                currentClaw -= 0.05;
+                theHardwareMap.servoClaw2.setPosition(currentClaw);
+            }*/
 
             //telemetry.update();
 
@@ -169,15 +178,25 @@ public class TeleOpMain extends LinearOpMode {
                 theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 double leftStickY = -currentGamepad2.left_stick_y;
                 double currentPosition = theHardwareMap.armMotor.getCurrentPosition();
-                if (leftStickY > 0 && currentPosition < 400) {
+                //if moving up and under apex, then do positive power to move up
+                if (leftStickY > 0 && currentPosition < 500) {
                     Log.d(TAG, "moving up  " + currentPosition + " " + leftStickY);
                     theHardwareMap.armMotor.setPower(0.8 * leftStickY);
+
+                    //if moving down and over apex, then do negative power to move back
                 } else if (leftStickY < 0 && currentPosition > 500){
                     Log.d(TAG, "moving up from other side  " + currentPosition + " " + leftStickY);
                     theHardwareMap.armMotor.setPower(0.8 * leftStickY);
+
+                    //if moving down and under apex, then do positive power to slow down
                 } else if (leftStickY < 0 && currentPosition < 400){
                     Log.d(TAG, "slowing down  " + currentPosition + " " + leftStickY);
                     theHardwareMap.armMotor.setPower(0.15);
+
+                    //if moving up and over apex, then do reverse power
+                } else if (leftStickY > 0 && currentPosition > 600){
+                    Log.d(TAG, "slowing down  " + currentPosition + " " + leftStickY);
+                    theHardwareMap.armMotor.setPower(-0.15);
 
                 } else {
                     Log.d(TAG, "moving no power  " + currentPosition + " " + leftStickY);
@@ -226,8 +245,19 @@ public class TeleOpMain extends LinearOpMode {
             //Flipper
             if (currentGamepad2.right_stick_y !=0)
             {
-                telemetry.addData("CLAW PRESSED! ", currentGamepad2.right_stick_y);
-                theHardwareMap.clawRotator.setPower(0.4 * currentGamepad2.right_stick_y);
+
+                double clawRotatorPos = theHardwareMap.clawRotator.getCurrentPosition();
+                double rightStickY = -currentGamepad2.right_stick_y;
+                double clawPowerReducer = 0.5;
+                //claw limits
+                if (rightStickY > 0 & clawRotatorPos < 200) {
+                    theHardwareMap.clawRotator.setPower(rightStickY * clawPowerReducer);
+                } else if (rightStickY < 0 & clawRotatorPos > -50){
+                    theHardwareMap.clawRotator.setPower(rightStickY * clawPowerReducer);
+                } else {
+                    theHardwareMap.clawRotator.setPower((0));
+                }
+                telemetry.addData("Claw rotator! ", clawRotatorPos + " " + currentGamepad2.right_stick_y);
             }
             else
             {
@@ -237,6 +267,9 @@ public class TeleOpMain extends LinearOpMode {
             telemetry.addData("Claw Rotator Position",theHardwareMap.clawRotator.getCurrentPosition());
 
 
+            if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
+
+            }
 
             //telemetry.update();
 

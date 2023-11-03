@@ -92,7 +92,7 @@ public class RobotHardwareMap {
         clawRotator.setPower(0);
         clawRotator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         clawRotator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        clawRotator.setDirection(DcMotorSimple.Direction.FORWARD);
+        clawRotator.setDirection(DcMotorSimple.Direction.REVERSE);
         clawRotator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         armMotor.setPower(0);
