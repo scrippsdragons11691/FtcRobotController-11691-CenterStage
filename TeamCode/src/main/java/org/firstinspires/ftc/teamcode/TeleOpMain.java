@@ -52,6 +52,21 @@ public class TeleOpMain extends LinearOpMode {
         //theHardwareMap.servoClaw2.setPosition(0.075);
 
         // waitForStart();
+        AprilTagProcessor aprilTagProcessor = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawTagID(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagOutline(true)
+                .build();
+        VisionPortal visionPortal = new VisionPortal.Builder()
+                .addProcessor(aprilTagProcessor)
+                .setCamera(theHardwareMap.frontCamera)
+                .setCameraResolution(new Size(640, 480))
+                .setStreamFormat(VisionPortal.StreamFormat.YUY2)
+                .enableLiveView(true)
+                .setAutoStopLiveView(true)
+                .build();
+
 
         // do something in init mode?
         while (opModeInInit()) {
@@ -77,20 +92,7 @@ public class TeleOpMain extends LinearOpMode {
         Gamepad previousGamepad2 = new Gamepad();
 
         //Set front camera up for AcmeTag
-        AprilTagProcessor aprilTagProcessor = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawTagID(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagOutline(true)
-                .build();
-        VisionPortal visionPortal = new VisionPortal.Builder()
-                .addProcessor(aprilTagProcessor)
-                .setCamera(theHardwareMap.frontCamera)
-                .setCameraResolution(new Size(640, 480))
-                .setStreamFormat(VisionPortal.StreamFormat.YUY2)
-                .enableLiveView(true)
-                .setAutoStopLiveView(true)
-                .build();
+
 
         double currentClaw = 0.8;
         //Main Loop

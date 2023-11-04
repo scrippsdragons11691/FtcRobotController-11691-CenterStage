@@ -53,14 +53,13 @@ public class RobotHardwareMap {
     public Servo servoClaw2;
     public Servo servoLauncher;
 
-    //public ColorSensor elevatorColorSensor;
-    //public DcMotor intakeMotor;
 
     public IMU chImu;
 
     private final int baseResolution_x = 320;
     private final int baseResolution_y = 240;
     WebcamName frontCamera;
+    WebcamName backCamera;
 
     boolean controlHubBatteryVoltageEnabled = true;
     boolean expansionHubBatteryVoltageEnabled = true;
@@ -78,7 +77,7 @@ public class RobotHardwareMap {
         controlHubBatteryVoltage = baseHMap.get(VoltageSensor.class, "Control Hub");
         //expansionHubBatteryVoltage = baseHMap.get(VoltageSensor.class, "Expansion Hub 2");
         controlHub = baseHMap.get(LynxModule.class, "Control Hub");
-        expansionHub = baseHMap.get(LynxModule.class, "Expansion Hub 2");
+        //expansionHub = baseHMap.get(LynxModule.class, "Expansion Hub 2");
 
         //dc motor vs dc motor ex?
         backLeftMotor = baseHMap.get(DcMotorEx.class, "RL");
@@ -86,27 +85,31 @@ public class RobotHardwareMap {
         frontLeftMotor = baseHMap.get(DcMotorEx.class, "FL");
         frontRightMotor = baseHMap.get(DcMotorEx.class, "FR");
 
-        clawRotator = baseHMap.get(DcMotorEx.class, "CR");
-        armMotor = baseHMap.get(DcMotorEx.class, "ARM");
+        try {
+            clawRotator = baseHMap.get(DcMotorEx.class, "CR");
+            clawRotator.setPower(0);
+            clawRotator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            clawRotator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            clawRotator.setDirection(DcMotorSimple.Direction.REVERSE);
+            clawRotator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        clawRotator.setPower(0);
-        clawRotator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        clawRotator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        clawRotator.setDirection(DcMotorSimple.Direction.REVERSE);
-        clawRotator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        armMotor.setPower(0);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            armMotor = baseHMap.get(DcMotorEx.class, "ARM");
+            armMotor.setPower(0);
+            armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        } catch (IllegalArgumentException iae){
+            opMode.telemetry.addData("motors", iae.getMessage());
+        }
 
         //Camera
         try {
             frontCamera = baseHMap.get(WebcamName.class, "Front Camera");
-            opMode.telemetry.addData("frontCamera", "success ");
+            backCamera = baseHMap.get(WebcamName.class, "Back Camera");
+            opMode.telemetry.addData("cameras", "success ");
         } catch (IllegalArgumentException iae){
-            opMode.telemetry.addData("frontCamera", iae.getMessage());
+            opMode.telemetry.addData("cameras", iae.getMessage());
         }
 
         //LEDs
@@ -126,7 +129,7 @@ public class RobotHardwareMap {
             //servoLauncher = baseHMap.get(Servo.class, "ServoLauncher");
         } catch (IllegalArgumentException iae)
         {
-            opMode.telemetry.addData("Servo", iae.getMessage());
+            opMode.telemetry.addData("servos", iae.getMessage());
         }
 
         //Initializes the IMU

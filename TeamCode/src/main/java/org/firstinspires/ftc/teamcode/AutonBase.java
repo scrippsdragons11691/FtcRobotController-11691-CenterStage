@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
+import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +12,8 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 public class AutonBase extends LinearOpMode {
 
@@ -72,6 +75,25 @@ public class AutonBase extends LinearOpMode {
         theHardwareMap.frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         theHardwareMap.backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         theHardwareMap.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        AprilTagProcessor aprilTagProcessor = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawTagID(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagOutline(true)
+                .build();
+        VisionPortal visionPortal = new VisionPortal.Builder()
+                .addProcessor(aprilTagProcessor)
+                .setCamera(theHardwareMap.frontCamera)
+                .setCameraResolution(new Size(640, 480))
+                .setStreamFormat(VisionPortal.StreamFormat.YUY2)
+                .enableLiveView(true)
+                .setAutoStopLiveView(true)
+                .build();
+
+        //move claw and arm to default positions during init
+        //theHardwareMap.servoClaw1.setPosition(0.75);
+        //theHardwareMap.servoClaw2.setPosition(0.03);
 
         /*telemetry.addData("Starting at",  "%7d :%7d :%7d :%7d",
                 theHardwareMap.frontLeftMotor.getCurrentPosition(),
