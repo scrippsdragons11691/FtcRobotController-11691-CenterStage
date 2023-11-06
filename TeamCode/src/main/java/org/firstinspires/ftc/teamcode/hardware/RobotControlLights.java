@@ -4,21 +4,36 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotHardwareMap;
 
 public class RobotControlLights {
 
+    static final String TAG = "RobotControlLights";
     RobotHardwareMap theHardwareMap;
     LinearOpMode opMode;
 
-    static final String TAG = "RobotControlLights";
     int sequenceCounter = 0;
     LightSequence currentSequence = LightSequence.NONE;
 
     Light currentLights = Light.ALL;
     LightMode currentMode = LightMode.OFF;
     LightMode currentLightStep = LightMode.OFF;
+
+    RobotControlLight leftRedLED;
+    RobotControlLight leftGreenLED;
+    RobotControlLight rightRedLED;
+    RobotControlLight rightGreenLED;
+    RobotControlLight frontLeftRedLED;
+    RobotControlLight frontLeftGreenLED;
+    RobotControlLight frontRightRedLED;
+    RobotControlLight frontRightGreenLED;
+
+    RobotControlLight LED1Red;
+    RobotControlLight LED1Green;
+    RobotControlLight LED2Red;
+    RobotControlLight LED2Green;
 
     public enum LightSequence {
         NONE, ALTERNATE_GREEN, ALTERNATE_RED
@@ -27,29 +42,25 @@ public class RobotControlLights {
     public RobotControlLights(RobotHardwareMap theHardwareMap, LinearOpMode opMode) {
         this.opMode = opMode;
         this.theHardwareMap = theHardwareMap;
+        initialize();
     }
 
+    //LED1green, LED1red, LED2green, LED2red
     public void initialize(){
-        //Log.d(TAG, "Lights init");
+        Log.d(TAG, "Lights init");
+        leftRedLED = new RobotControlLight(theHardwareMap, opMode, "leftred");
+        leftGreenLED = new RobotControlLight(theHardwareMap, opMode, "leftgreen");
+        rightRedLED = new RobotControlLight(theHardwareMap, opMode, "rightred");
+        rightGreenLED = new RobotControlLight(theHardwareMap, opMode, "rightgreen");
+        frontLeftRedLED = new RobotControlLight(theHardwareMap, opMode, "flRed");
+        frontLeftGreenLED = new RobotControlLight(theHardwareMap, opMode, "flGreen");
+        frontRightRedLED = new RobotControlLight(theHardwareMap, opMode, "frRed");
+        frontRightGreenLED = new RobotControlLight(theHardwareMap, opMode, "frGreen");
 
-        theHardwareMap.LED1Green.setMode(DigitalChannel.Mode.OUTPUT);
-        theHardwareMap.LED1Red.setMode(DigitalChannel.Mode.OUTPUT);
-        theHardwareMap.LED2Green.setMode(DigitalChannel.Mode.OUTPUT);
-        theHardwareMap.LED2Red.setMode(DigitalChannel.Mode.OUTPUT);
-//        theHardwareMap.leftRedLED.setMode(DigitalChannel.Mode.OUTPUT);
-//        theHardwareMap.leftGreenLED.setMode(DigitalChannel.Mode.OUTPUT);
-//        theHardwareMap.frontRightRedLED.setMode(DigitalChannel.Mode.OUTPUT);
-//        theHardwareMap.frontRightGreenLED.setMode(DigitalChannel.Mode.OUTPUT);
-//        theHardwareMap.frontLeftRedLED.setMode(DigitalChannel.Mode.OUTPUT);
-//        theHardwareMap.frontLeftGreenLED.setMode(DigitalChannel.Mode.OUTPUT);
-
-        //runLightSeq(LightSequence.ALTERNATE_GREEN, 5);
-
-        /*theHardwareMap.rightRedLED.setState(false);
-        theHardwareMap.rightGreenLED.setState(true);
-
-        theHardwareMap.leftRedLED.setState(false);
-        theHardwareMap.leftGreenLED.setState(true);*/
+        LED1Red = new RobotControlLight(theHardwareMap, opMode, "leftred");
+        LED1Green = new RobotControlLight(theHardwareMap, opMode, "leftgreen");
+        LED2Red = new RobotControlLight(theHardwareMap, opMode, "rightred");
+        LED2Green = new RobotControlLight(theHardwareMap, opMode, "rightgreen");
 
     }
 
@@ -87,22 +98,80 @@ public class RobotControlLights {
         switch (light){
 
             case LED1:
-                theHardwareMap.LED1Green.setState(lightBoolGreen);
-                theHardwareMap.LED1Red.setState(lightBoolRed);
+                LED1Red.setState(lightBoolRed);
+                LED1Green.setState(lightBoolGreen);
                 break;
 
             case LED2:
-                theHardwareMap.LED2Green.setState(lightBoolGreen);
-                theHardwareMap.LED2Red.setState(lightBoolRed);
+                LED2Red.setState(lightBoolRed);
+                LED2Green.setState(lightBoolGreen);
+                break;
+
+            case BACKLEFT:
+                leftRedLED.setState(lightBoolRed);
+                leftGreenLED.setState(lightBoolGreen);
+                break;
+
+            case BACKRIGHT:
+                rightRedLED.setState(lightBoolRed);
+                rightGreenLED.setState(lightBoolGreen);
+                break;
+
+            case FRONTLEFT:
+                frontLeftGreenLED.setState(lightBoolGreen);
+                frontLeftRedLED.setState(lightBoolRed);
+                break;
+
+            case FRONTRIGHT:
+                frontRightGreenLED.setState(lightBoolGreen);
+                frontRightRedLED.setState(lightBoolRed);
+                break;
+
+            case ALL_RIGHT:
+                rightGreenLED.setState(lightBoolGreen);
+                rightRedLED.setState(lightBoolRed);
+                frontRightGreenLED.setState(lightBoolGreen);
+                frontRightRedLED.setState(lightBoolRed);
+                break;
+
+            case ALL_LEFT:
+                leftGreenLED.setState(lightBoolGreen);
+                leftRedLED.setState(lightBoolRed);
+                frontLeftGreenLED.setState(lightBoolGreen);
+                frontLeftRedLED.setState(lightBoolRed);
+                break;
+
+            case ALL_BACK:
+                rightGreenLED.setState(lightBoolGreen);
+                rightRedLED.setState(lightBoolRed);
+                leftGreenLED.setState(lightBoolGreen);
+                leftRedLED.setState(lightBoolRed);
+                break;
+
+            case ALL_FRONT:
+                frontRightGreenLED.setState(lightBoolGreen);
+                frontRightRedLED.setState(lightBoolRed);
+                frontLeftGreenLED.setState(lightBoolGreen);
+                frontLeftRedLED.setState(lightBoolRed);
                 break;
 
             case ALL:
-                theHardwareMap.LED1Green.setState(lightBoolGreen);
-                theHardwareMap.LED1Red.setState(lightBoolRed);
-                theHardwareMap.LED2Green.setState(lightBoolGreen);
-                theHardwareMap.LED2Red.setState((lightBoolRed));
+                frontRightGreenLED.setState(lightBoolGreen);
+                frontRightRedLED.setState(lightBoolRed);
+                frontLeftGreenLED.setState(lightBoolGreen);
+                frontLeftRedLED.setState(lightBoolRed);
+                rightGreenLED.setState(lightBoolGreen);
+                rightRedLED.setState(lightBoolRed);
+                leftGreenLED.setState(lightBoolGreen);
+                leftRedLED.setState(lightBoolRed);
+                LED1Green.setState(lightBoolGreen);
+                LED1Red.setState(lightBoolRed);
+                LED2Green.setState(lightBoolGreen);
+                LED2Red.setState(lightBoolRed);
                 break;
+
         }
+
     }
 
     /**
@@ -126,14 +195,6 @@ public class RobotControlLights {
         currentLightStep = newLightStep;
     }
 
-   /* public void switchLights(){
-        if (theHardwareMap.leftRedLED.getState()){
-            theHardwareMap.leftRedLED.setState(false);
-        } else {
-            theHardwareMap.leftRedLED.setState(true);
-        }
-    }*/
-
     public void runLightSeq(LightSequence lightSeq, int times){
         currentSequence = lightSeq;
         sequenceCounter = times;
@@ -141,27 +202,27 @@ public class RobotControlLights {
 
     private void mainLoop(){
         if (sequenceCounter > 0){
-            //Log.d(TAG, "light seq:" + sequenceCounter);
+            Log.d(TAG, "light seq:" + sequenceCounter);
             if (currentSequence == LightSequence.ALTERNATE_GREEN){
                 if (sequenceCounter % 2 == 0) {
 
                 } else if (sequenceCounter == 1){
-                    theHardwareMap.LED1Green.setState(true);
-                    theHardwareMap.LED1Red.setState(false);
+                    leftGreenLED.setState(true);
+                    rightGreenLED.setState(true);
                 } else {
-                    theHardwareMap.LED1Green.setState(false);
-                    theHardwareMap.LED2Red.setState(false);
+                    rightGreenLED.setState(true);
+                    leftGreenLED.setState(false);
                 }
             } else if (currentSequence == LightSequence.ALTERNATE_RED){
                 if (sequenceCounter % 2 == 0) {
-                    theHardwareMap.LED1Green.setState(false);
-                    theHardwareMap.LED2Red.setState(true);
+                    rightRedLED.setState(false);
+                    leftRedLED.setState(true);
                 } else if (sequenceCounter == 1){
-                    theHardwareMap.LED1Green.setState(false);
-                    theHardwareMap.LED1Red.setState(true);
+                    rightRedLED.setState(true);
+                    leftRedLED.setState(true);
                 } else {
-                    theHardwareMap.LED1Green.setState(false);
-                    theHardwareMap.LED1Red.setState(false);
+                    rightRedLED.setState(true);
+                    leftRedLED.setState(false);
                 }
             }
             sequenceCounter--;
@@ -171,4 +232,3 @@ public class RobotControlLights {
     }
 
 }
-

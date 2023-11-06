@@ -13,6 +13,10 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlArm;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperMotor;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlGripperServos;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlLights;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlMechanum;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -45,11 +49,18 @@ public class TeleOpMain extends LinearOpMode {
         robotDrive.initialize();
 
         RobotControlLights lights = new RobotControlLights(theHardwareMap, this);
-        lights.initialize();
+        RobotControlArm armMotor = new RobotControlArm(theHardwareMap,this);
+        RobotControlFlipperMotor flipperMotor = new RobotControlFlipperMotor(theHardwareMap, this);
+        RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ClawServo1");
+        RobotControlGripperServos clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ClawServo2");
 
-        //Initial servo positions
-        //theHardwareMap.servoClaw1.setPosition(0.8);
-        //theHardwareMap.servoClaw2.setPosition(0.075);
+        lights.switchLight(Light.ALL, LightMode.GREEN);
+
+        /*FtcDashboard dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());*/
+
+        telemetry.addData("Robot", "Initialized successfully");
+        telemetry.update();
 
         // waitForStart();
         AprilTagProcessor aprilTagProcessor = new AprilTagProcessor.Builder()
@@ -82,7 +93,8 @@ public class TeleOpMain extends LinearOpMode {
         //Initialize remaining variables
         double loopTimeStart = 0;
         boolean slowMode = true;
-        lights.switchLight(Light.LED2, LightMode.GREEN); //Initial light for slow speed
+        lights.switchLight(Light.LED1, LightMode.OFF);
+		lights.switchLight(Light.LED2, LightMode.GREEN);
         boolean showTelemetry = false;
 
         //create some gamepads to look at debouncing
@@ -141,27 +153,25 @@ public class TeleOpMain extends LinearOpMode {
 
             if (currentGamepad2.left_bumper)
             {
-                theHardwareMap.servoClaw1.setPosition(0.9);
-                telemetry.addData("Claw1 Open",theHardwareMap.servoClaw1.getPosition());
+                clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
+                telemetry.addData("Claw1 Open",clawServo1.getCurrentPosition());
             }
             else if (!currentGamepad2.left_bumper & previousGamepad2.left_bumper)
             {
-                theHardwareMap.servoClaw1.setPosition(0.75);
-                telemetry.addData("Claw1 Close",theHardwareMap.servoClaw1.getPosition());
+                clawServo1.moveToPosition(GripperPositions.GRIPPER1_CLOSED);
+                telemetry.addData("Claw1 Close",clawServo1.getCurrentPosition());
             }
 
-            //Open/close claw2
-            telemetry.addData("Claw2 Position",theHardwareMap.servoClaw2.getPosition());
-
+            //claw 2 controls
             if (currentGamepad2.right_bumper)
             {
-                theHardwareMap.servoClaw2.setPosition(0.1);
-                telemetry.addData("Claw2 Open",theHardwareMap.servoClaw2.getPosition());
+                clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
+                telemetry.addData("Claw2 Open",clawServo2.getCurrentPosition());
             }
             else if (!currentGamepad2.right_bumper & previousGamepad2.right_bumper)
             {
-                theHardwareMap.servoClaw2.setPosition(0.03);
-                telemetry.addData("Claw2 Close",theHardwareMap.servoClaw2.getPosition());
+                clawServo2.moveToPosition(GripperPositions.GRIPPER2_CLOSED);
+                telemetry.addData("Claw2 Close",clawServo2.getCurrentPosition());
             }
 
             /*if (currentGamepad2.y && previousGamepad2.y){
@@ -172,55 +182,14 @@ public class TeleOpMain extends LinearOpMode {
                 theHardwareMap.servoClaw2.setPosition(currentClaw);
             }*/
 
-            //telemetry.update();
-
             //Arm Up/Down
             if (currentGamepad2.left_stick_y != 0)
             {
-                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                double leftStickY = -currentGamepad2.left_stick_y;
-                double currentPosition = theHardwareMap.armMotor.getCurrentPosition();
-                //if moving up and under apex, then do positive power to move up
-                if (leftStickY > 0 && currentPosition < 500) {
-                    Log.d(TAG, "moving up  " + currentPosition + " " + leftStickY);
-                    theHardwareMap.armMotor.setPower(0.8 * leftStickY);
-
-                    //if moving down and over apex, then do negative power to move back
-                } else if (leftStickY < 0 && currentPosition > 500){
-                    Log.d(TAG, "moving up from other side  " + currentPosition + " " + leftStickY);
-                    theHardwareMap.armMotor.setPower(0.8 * leftStickY);
-
-                    //if moving down and under apex, then do positive power to slow down
-                } else if (leftStickY < 0 && currentPosition < 400){
-                    Log.d(TAG, "slowing down  " + currentPosition + " " + leftStickY);
-                    theHardwareMap.armMotor.setPower(0.15);
-
-                    //if moving up and over apex, then do reverse power
-                } else if (leftStickY > 0 && currentPosition > 600){
-                    Log.d(TAG, "slowing down  " + currentPosition + " " + leftStickY);
-                    theHardwareMap.armMotor.setPower(-0.15);
-
-                } else {
-                    Log.d(TAG, "moving no power  " + currentPosition + " " + leftStickY);
-                    theHardwareMap.armMotor.setPower(0);
-                }
+                armMotor.moveArmPower(-currentGamepad2.left_stick_y);
             } else {
-                //float code
-                double currentPosition = theHardwareMap.armMotor.getCurrentPosition();
-                if (currentPosition < 150 && currentPosition > 10) {
-                    theHardwareMap.armMotor.setPower(0.3);
-                    Log.d(TAG, "floating... " + currentPosition);
-                } else if (currentPosition > 500 && currentPosition < 800){
-                    theHardwareMap.armMotor.setPower(-0.3);
-                    Log.d(TAG, "negative floating..." + currentPosition);
-                } else {
-                    theHardwareMap.armMotor.setPower(0);
-                    Log.d(TAG, "stopped... " + currentPosition);
-                }
-
+                armMotor.stopArmWithHold();
             }
-            telemetry.addData("armMotor Position",theHardwareMap.armMotor.getCurrentPosition());
-            telemetry.addData("armMotor current", theHardwareMap.armMotor.getCurrent(CurrentUnit.MILLIAMPS));
+
 
             if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
                 //-638 is maximum
@@ -247,31 +216,13 @@ public class TeleOpMain extends LinearOpMode {
             //Flipper
             if (currentGamepad2.right_stick_y !=0)
             {
-
-                double clawRotatorPos = theHardwareMap.clawRotator.getCurrentPosition();
-                double rightStickY = -currentGamepad2.right_stick_y;
-                double clawPowerReducer = 0.5;
-                //claw limits
-                if (rightStickY > 0 & clawRotatorPos < 200) {
-                    theHardwareMap.clawRotator.setPower(rightStickY * clawPowerReducer);
-                } else if (rightStickY < 0 & clawRotatorPos > -50){
-                    theHardwareMap.clawRotator.setPower(rightStickY * clawPowerReducer);
-                } else {
-                    theHardwareMap.clawRotator.setPower((0));
-                }
-                telemetry.addData("Claw rotator! ", clawRotatorPos + " " + currentGamepad2.right_stick_y);
+                flipperMotor.moveFlipperPower(-currentGamepad2.right_stick_y);
+            } else {
+                flipperMotor.stopFlipper();
             }
-            else
-            {
-                theHardwareMap.clawRotator.setPower((0));
 
-            }
             telemetry.addData("Claw Rotator Position",theHardwareMap.clawRotator.getCurrentPosition());
 
-
-            if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
-
-            }
 
             //telemetry.update();
 
