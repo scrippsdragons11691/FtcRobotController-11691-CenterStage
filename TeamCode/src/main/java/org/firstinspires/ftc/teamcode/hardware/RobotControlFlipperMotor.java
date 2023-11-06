@@ -39,6 +39,7 @@ public class RobotControlFlipperMotor {
             flipperMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
             flipperInitialized = true;
+            opMode.telemetry.addData("flipperMotor", "initialized");
         } catch (IllegalArgumentException iae){
             opMode.telemetry.addData("flipperMotor", iae.getMessage());
         }
@@ -59,24 +60,43 @@ public class RobotControlFlipperMotor {
         //only try moving the arm if initialized
         if (flipperInitialized) {
             double flipperPosition = flipperMotor.getCurrentPosition();
-            double clawPowerReducer = 0.5;
+            double clawPowerReducer = 0.3;
+            //since we're in manual mode, run without encoder
+            flipperMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-            if (power > 0 & flipperPosition < FlipperMotorPositions.MAX_REVERSE.getEncodedPos()) {
+            if (power > 0
+                    && flipperPosition < FlipperMotorPositions.MAX_REVERSE.getEncodedPos()) {
+                //telemetry.addData("flipperPower1:", power + " pos " + flipperPosition);
                 flipperMotor.setPower(power * clawPowerReducer);
-            } else if (power < 0 & flipperPosition > FlipperMotorPositions.MAX_FORWARD.getEncodedPos()){
+            } else if (power < 0
+                    && flipperPosition > FlipperMotorPositions.MAX_FORWARD.getEncodedPos()){
+                //telemetry.addData("flipperPower2:", power  + " pos " + flipperPosition);
                 flipperMotor.setPower(power * clawPowerReducer);
             } else {
+                //telemetry.addData("flipperPowerStop:", power  + " pos " + flipperPosition);
                 stopFlipper();
             }
+        }
+    }
 
-            flipperMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            flipperMotor.setPower(power);
+    public void moveFlipperEncoded(FlipperMotorPositions targetPosition){
+        mode = ControlModes.AUTO;
+        flipperTargetPosition = targetPosition;
+        if (flipperInitialized){
+            //since we're in auto mode, run with encoder and run to position
+            telemetry.addData("flipperAuto:", targetPosition.getPosition());
+            flipperMotor.setTargetPosition(targetPosition.getEncodedPos());
+            flipperMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            flipperMotor.setPower(0.5);
         }
     }
 
     public void stopFlipper(){
         if (flipperInitialized){
-            flipperMotor.setPower(0);
+            //if auto mode, don't set power to 0
+            if (mode != ControlModes.AUTO) {
+                flipperMotor.setPower(0);
+            }
         }
     }
 

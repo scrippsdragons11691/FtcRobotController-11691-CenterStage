@@ -39,6 +39,7 @@ public class RobotControlGripperServos {
             servo = robotHardwareMap.baseHMap.get(Servo.class, servoLocation);
             servo.setDirection(Servo.Direction.FORWARD);
             servoInitialized = true;
+            opMode.telemetry.addData(servoLocation, "Initialized");
         } catch (IllegalArgumentException iae){
             opMode.telemetry.addData(servoLocation, iae.getMessage());
         }

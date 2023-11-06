@@ -57,10 +57,10 @@ public class RobotControlLights {
         frontRightRedLED = new RobotControlLight(theHardwareMap, opMode, "frRed");
         frontRightGreenLED = new RobotControlLight(theHardwareMap, opMode, "frGreen");
 
-        LED1Red = new RobotControlLight(theHardwareMap, opMode, "leftred");
-        LED1Green = new RobotControlLight(theHardwareMap, opMode, "leftgreen");
-        LED2Red = new RobotControlLight(theHardwareMap, opMode, "rightred");
-        LED2Green = new RobotControlLight(theHardwareMap, opMode, "rightgreen");
+        LED1Red = new RobotControlLight(theHardwareMap, opMode, "LED1red");
+        LED1Green = new RobotControlLight(theHardwareMap, opMode, "LED1green");
+        LED2Red = new RobotControlLight(theHardwareMap, opMode, "LED2red");
+        LED2Green = new RobotControlLight(theHardwareMap, opMode, "LED2green");
 
     }
 

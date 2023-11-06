@@ -30,7 +30,8 @@ public class RobotControlLight {
             led.setMode(DigitalChannel.Mode.OUTPUT);
             ledInit = true;
         } catch (IllegalArgumentException iae){
-            opMode.telemetry.addData(lightLocation, iae.getMessage());
+            //don't output error for light initialization
+            //opMode.telemetry.addData(lightLocation, iae.getMessage());
         }
     }
 

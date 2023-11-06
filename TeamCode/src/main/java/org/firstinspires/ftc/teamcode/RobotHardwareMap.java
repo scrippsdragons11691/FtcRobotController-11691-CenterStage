@@ -85,24 +85,6 @@ public class RobotHardwareMap {
         frontLeftMotor = baseHMap.get(DcMotorEx.class, "FL");
         frontRightMotor = baseHMap.get(DcMotorEx.class, "FR");
 
-        try {
-            clawRotator = baseHMap.get(DcMotorEx.class, "CR");
-            clawRotator.setPower(0);
-            clawRotator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            clawRotator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            clawRotator.setDirection(DcMotorSimple.Direction.REVERSE);
-            clawRotator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-            armMotor = baseHMap.get(DcMotorEx.class, "ARM");
-            armMotor.setPower(0);
-            armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        } catch (IllegalArgumentException iae){
-            opMode.telemetry.addData("motors", iae.getMessage());
-        }
-
         //Camera
         try {
             frontCamera = baseHMap.get(WebcamName.class, "Front Camera");
@@ -110,26 +92,6 @@ public class RobotHardwareMap {
             opMode.telemetry.addData("cameras", "success ");
         } catch (IllegalArgumentException iae){
             opMode.telemetry.addData("cameras", iae.getMessage());
-        }
-
-        //LEDs
-        try {
-            LED1Green = baseHMap.get(DigitalChannel.class, "LED1green");
-            LED1Red = baseHMap.get(DigitalChannel.class, "LED1red");
-            LED2Green = baseHMap.get(DigitalChannel.class, "LED2green");
-            LED2Red = baseHMap.get(DigitalChannel.class, "LED2red");
-        } catch (IllegalArgumentException iae){
-            opMode.telemetry.addData("lights", iae.getMessage());
-        }
-
-        //Servos
-        try {
-            servoClaw1 = baseHMap.get(Servo.class, "ServoClaw1");
-            servoClaw2 = baseHMap.get(Servo.class, "ServoClaw2");
-            //servoLauncher = baseHMap.get(Servo.class, "ServoLauncher");
-        } catch (IllegalArgumentException iae)
-        {
-            opMode.telemetry.addData("servos", iae.getMessage());
         }
 
         //Initializes the IMU

@@ -42,6 +42,7 @@ public class RobotControlArm {
             armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
             armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
             armInitialized = true;
+            opMode.telemetry.addData("arm", "initialized");
         } catch (IllegalArgumentException iae){
             opMode.telemetry.addData("arm", iae.getMessage());
         }
@@ -95,6 +96,14 @@ public class RobotControlArm {
             }
         }
 
+    }
+
+    public void moveArmEncoded(ArmPositions armTargetPosition){
+        if (armInitialized){
+            armMotor.setTargetPosition(armTargetPosition.getEncodedPos());
+            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            armMotor.setPower(1);
+        }
     }
 
     public void stopArmWithHold(){
