@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.hardware;
 public enum FlipperMotorPositions {
 
     UNKNOWN("UNKNOWN", 0, 0, 0),
+    CLAW1_DOWN("CLAW1_DOWN", 128, -0.75, 400),
+    CLAW2_DOWN("CLAW2_DOWN", 0, -0.75, 400),
     MAX_REVERSE("MAX_FORWARD", 200, -0.75, 400),
     MAX_FORWARD("MAX_REVERSE", -50, 0.75, 400);
 

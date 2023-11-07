@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
+import org.firstinspires.ftc.teamcode.hardware.FlipperMotorPositions;
 import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlArm;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperMotor;
@@ -51,8 +53,8 @@ public class TeleOpMain extends LinearOpMode {
         RobotControlLights lights = new RobotControlLights(theHardwareMap, this);
         RobotControlArm armMotor = new RobotControlArm(theHardwareMap,this);
         RobotControlFlipperMotor flipperMotor = new RobotControlFlipperMotor(theHardwareMap, this);
-        RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ClawServo1");
-        RobotControlGripperServos clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ClawServo2");
+        RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
+        RobotControlGripperServos clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
 
         lights.switchLight(Light.ALL, LightMode.GREEN);
 
@@ -81,8 +83,8 @@ public class TeleOpMain extends LinearOpMode {
 
         // do something in init mode?
         while (opModeInInit()) {
-            telemetry.addData("Robot", "Initialized successfully. Ready to run?");
-            telemetry.update();
+            //telemetry.addData("Robot", "Initialized successfully. Ready to run?");
+            //telemetry.update();
         }
 
         telemetry.addData("Robot", "running teleop.. press (Y) For telemetry");
@@ -148,9 +150,11 @@ public class TeleOpMain extends LinearOpMode {
                 lights.switchLight(Light.LED2, LightMode.YELLOW);
             }
 
-            //Open/close claw1
-            telemetry.addData("Claw1 Position",theHardwareMap.servoClaw1.getPosition());
+            /***************
+             * Gamepad 2
+             */
 
+            //Open/close claw1
             if (currentGamepad2.left_bumper)
             {
                 clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
@@ -192,24 +196,10 @@ public class TeleOpMain extends LinearOpMode {
 
 
             if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
-                //-638 is maximum
-                //-440 is the 90 degree angle
-                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                theHardwareMap.armMotor.setTargetPosition(600);
-                //theHardwareMap.armMotor.setPower(0.8);
-                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_STRAIGHT);
 
             } else if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
-                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                theHardwareMap.armMotor.setTargetPosition(90);
-                //theHardwareMap.armMotor.setPower(0.8);
-                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            } else if (currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
-                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                theHardwareMap.armMotor.setTargetPosition(440);
-                //theHardwareMap.armMotor.setPower();
-                theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
 
             }
 
@@ -221,51 +211,54 @@ public class TeleOpMain extends LinearOpMode {
                 flipperMotor.stopFlipper();
             }
 
-            telemetry.addData("Claw Rotator Position",theHardwareMap.clawRotator.getCurrentPosition());
+            if (currentGamepad2.a && !previousGamepad2.a)
+            {
+                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_DOWN);
+            }
 
+            if (currentGamepad2.b && !previousGamepad2.b){
+                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_DOWN);
+            }
 
-            //telemetry.update();
 
             //Check for detections
             lights.switchLight(Light.LED1, LightMode.OFF);
             //telemetry.clear();
 
-            List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
+            if (currentGamepad1.x) {
 
-            //loop through the AprilTag detections to see what we found
-            for (AprilTagDetection detection : currentDetections){
-                //update the lights that we found one
-                lights.switchLight(Light.LED1, LightMode.GREEN);
+                List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
 
-                //If we found something, display the data for it
-                if (detection.ftcPose != null) {
-                    telemetry.addData("Tag Bearing", detection.ftcPose.bearing);
-                    telemetry.addData("Tag Range", detection.ftcPose.range);
-                    telemetry.addData("Tag Yaw", detection.ftcPose.yaw);
-                    telemetry.addData("ID",detection.id);
+                //loop through the AprilTag detections to see what we found
+                for (AprilTagDetection detection : currentDetections) {
+                    //update the lights that we found one
+                    lights.switchLight(Light.LED1, LightMode.GREEN);
 
-                }
-                //If we detect a specific apriltag and they are pressing X, then we are twisting to that angle
-                if (detection.id == 5 && currentGamepad1.x) {
-                    telemetry.addData("Driveauto",detection.id);
-                    double twistAmount = 0.25;
-                    //adjust the twist based on the amount of yaw
-                    //tweak the color for 5 and or 2
-                    //add support for finding 2
-                    //test other buttons for ease of use
+                    //If we found something, display the data for it
+                    if (detection.ftcPose != null) {
+                        telemetry.addData("Tag Bearing", detection.ftcPose.bearing);
+                        telemetry.addData("Tag Range", detection.ftcPose.range);
+                        telemetry.addData("Tag Yaw", detection.ftcPose.yaw);
+                        telemetry.addData("ID", detection.id);
 
-                    if (detection.ftcPose.yaw >= 0) {
-                        twistAmount = twistAmount * -1;
                     }
-                    robotDrive.teleOpMechanum(0,0, twistAmount);
+                    //If we detect a specific apriltag and they are pressing X, then we are twisting to that angle
+                    if (detection.id == 5) {
+                        telemetry.addData("Driveauto", detection.id);
+                        double twistAmount = 0.25;
+                        //adjust the twist based on the amount of yaw
+                        //tweak the color for 5 and or 2
+                        //add support for finding 2
+                        //test other buttons for ease of use
+
+                        if (detection.ftcPose.yaw >= 0) {
+                            twistAmount = twistAmount * -1;
+                        }
+                        robotDrive.teleOpMechanum(0, 0, twistAmount);
+                    }
                 }
             }
-            //telemetry.update();
 
-            //show telemetry
-            if (currentGamepad1.y && !previousGamepad1.y) {
-                showTelemetry = !showTelemetry;
-            }
 
             //if (showTelemetry) {
             if (1 == 0){
@@ -282,7 +275,8 @@ public class TeleOpMain extends LinearOpMode {
                 //telemetry.addData("ch temp", theHardwareMap.controlHub.getTemperature(TempUnit.FARENHEIT));
                 //telemetry.addData("eh temp", theHardwareMap.expansionHub.getTemperature(TempUnit.FARENHEIT));
             }
-
+            armMotor.addArmTelemetry();
+            flipperMotor.addFlipperTelemetry();
             telemetry.addData("looptime", System.currentTimeMillis() - loopTimeStart);
             telemetry.update();
         }
