@@ -211,13 +211,20 @@ public class TeleOpMain extends LinearOpMode {
                 flipperMotor.stopFlipper();
             }
 
-            if (currentGamepad2.a && !previousGamepad2.a)
-            {
+
+
+            if (currentGamepad2.a && !previousGamepad2.a){
                 flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_DOWN);
+            }
+            if (currentGamepad2.x && !previousGamepad2.x){
+                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_UP);
             }
 
             if (currentGamepad2.b && !previousGamepad2.b){
                 flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_DOWN);
+            }
+            if (currentGamepad2.y && !previousGamepad2.y){
+                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_UP);
             }
 
 
@@ -278,6 +285,8 @@ public class TeleOpMain extends LinearOpMode {
             armMotor.addArmTelemetry();
             flipperMotor.addFlipperTelemetry();
             telemetry.addData("looptime", System.currentTimeMillis() - loopTimeStart);
+            telemetry.addData("Servo 1: ", clawServo1.getCurrentPosition().getServoPos());
+            telemetry.addData("Servo 2: ", clawServo2.getCurrentPosition().getServoPos());
             telemetry.update();
         }
 

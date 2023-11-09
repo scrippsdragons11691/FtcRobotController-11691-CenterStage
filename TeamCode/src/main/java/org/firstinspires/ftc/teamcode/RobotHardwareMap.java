@@ -97,11 +97,19 @@ public class RobotHardwareMap {
         //Initializes the IMU
         chImu = baseHMap.get(IMU.class, "chImu");
 
+        //Bucky Parameters
+        /*
         IMU.Parameters myIMUParamaters = new IMU.Parameters(
                     new RevHubOrientationOnRobot(
                                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
                                 RevHubOrientationOnRobot.UsbFacingDirection.UP
                     )
+        );*/
+        IMU.Parameters myIMUParamaters = new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
+                        RevHubOrientationOnRobot.UsbFacingDirection.UP
+                )
         );
         chImu.initialize(myIMUParamaters);
 

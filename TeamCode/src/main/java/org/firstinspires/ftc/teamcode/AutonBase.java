@@ -57,10 +57,13 @@ public class AutonBase extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
+    RobotCameraHandler robotCameraHandler;
     public void initialize() {
         theHardwareMap  = new RobotHardwareMap(hardwareMap, this);
+        robotCameraHandler = new RobotCameraHandler(theHardwareMap, this);
 
         theHardwareMap.initialize();
+        robotCameraHandler.initialize();
         imu = theHardwareMap.chImu;
 
         theHardwareMap.backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -83,7 +86,7 @@ public class AutonBase extends LinearOpMode {
         theHardwareMap.backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         theHardwareMap.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        aprilTagProcessor = new AprilTagProcessor.Builder()
+        /*aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawTagID(true)
                 .setDrawCubeProjection(true)
@@ -97,7 +100,7 @@ public class AutonBase extends LinearOpMode {
                 .setStreamFormat(VisionPortal.StreamFormat.YUY2)
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
-                .build();
+                .build();*/
 
         //move claw and arm to default positions during init
         //theHardwareMap.servoClaw1.setPosition(0.75);

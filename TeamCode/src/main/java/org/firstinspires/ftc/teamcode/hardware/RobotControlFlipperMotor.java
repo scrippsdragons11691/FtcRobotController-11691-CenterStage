@@ -87,7 +87,7 @@ public class RobotControlFlipperMotor {
             telemetry.addData("flipperAuto:", targetPosition.getPosition());
             flipperMotor.setTargetPosition(targetPosition.getEncodedPos());
             flipperMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            flipperMotor.setPower(0.5);
+            flipperMotor.setPower(0.75);
         }
     }
 
