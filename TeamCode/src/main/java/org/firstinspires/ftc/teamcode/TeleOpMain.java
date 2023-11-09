@@ -196,7 +196,7 @@ public class TeleOpMain extends LinearOpMode {
 
 
             if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
-                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_STRAIGHT);
+                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
 
             } else if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
                 armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);

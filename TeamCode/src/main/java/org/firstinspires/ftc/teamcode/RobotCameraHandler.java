@@ -26,9 +26,9 @@ public class RobotCameraHandler {
     public AtomicBoolean frontCameraIsOpen = new AtomicBoolean(false);
     public AtomicBoolean frontCameraIsFaulty = new AtomicBoolean(false);
     final boolean enableParkingCamera = false;
-    final boolean showParkingCameraStream = true;
-    final boolean enableFrontCamera = false;
-    final boolean showFrontCameraStream = false;
+    final boolean showParkingCameraStream = false;
+    final boolean enableFrontCamera = true;
+    final boolean showFrontCameraStream = true;
     final boolean showOnFTCDashboard = false;
 
 
@@ -81,14 +81,14 @@ public class RobotCameraHandler {
         @Override
         public void onOpened() {
             Log.d(TAG, "Front Camera opened.");
-            Log.d(TAG, "Setting Front pipeline as junction detection");
+            Log.d(TAG, "Setting Front pipeline as spike location detection");
             spikeLocationDetectionPipeline = new SpikeLocationDetectionPipeline(opMode.telemetry);
             frontCVCCamera.setPipeline(spikeLocationDetectionPipeline);
             Log.d(TAG, "Starting junction streaming");
             frontCVCCamera.startStreaming(
                     320,
                     240,
-                    OpenCvCameraRotation.UPSIDE_DOWN);
+                    OpenCvCameraRotation.UPRIGHT);
             Log.d(TAG, "Streaming front started");
             frontCameraIsOpen.set(true);
         }

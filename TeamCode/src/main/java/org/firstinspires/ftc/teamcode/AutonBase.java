@@ -14,6 +14,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.Light;
 import org.firstinspires.ftc.teamcode.hardware.LightMode;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlArm;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperMotor;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlGripperServos;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlLights;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -58,12 +62,25 @@ public class AutonBase extends LinearOpMode {
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
     RobotCameraHandler robotCameraHandler;
+    RobotControlLights lights;
+    RobotControlGripperServos clawServo1;
+    RobotControlGripperServos clawServo2;
+    RobotControlArm armMotor;
+    RobotControlFlipperMotor flipper;
+
     public void initialize() {
         theHardwareMap  = new RobotHardwareMap(hardwareMap, this);
         robotCameraHandler = new RobotCameraHandler(theHardwareMap, this);
+        lights = new RobotControlLights(theHardwareMap, this);
 
         theHardwareMap.initialize();
         robotCameraHandler.initialize();
+        clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
+        clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
+        armMotor = new RobotControlArm(theHardwareMap,this);
+        flipper = new RobotControlFlipperMotor(theHardwareMap, this);
+
+
         imu = theHardwareMap.chImu;
 
         theHardwareMap.backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -115,6 +132,9 @@ public class AutonBase extends LinearOpMode {
         telemetry.update();*/
         resetHeading();
     }
+
+
+
     public void encoderDrive (double speed, double inches, double timeoutS) {
         int newFrontLeftTarget;
         int newBackLeftTarget;
