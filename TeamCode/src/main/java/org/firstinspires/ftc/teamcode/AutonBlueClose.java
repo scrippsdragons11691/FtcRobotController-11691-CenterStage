@@ -13,9 +13,9 @@ public class AutonBlueClose extends AutonBase {
         waitForStart();
 
         //move the arm with the claw to the up position so that it does not drag on the floor position
-        theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        theHardwareMap.armMotor.setTargetPosition(90);
+        //theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //theHardwareMap.armMotor.setTargetPosition(90);
 
         imuDrive(.5, 23, 0);
         sleep(2000);

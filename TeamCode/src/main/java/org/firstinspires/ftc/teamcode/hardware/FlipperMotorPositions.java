@@ -10,6 +10,7 @@ public enum FlipperMotorPositions {
     MAX_REVERSE("MAX_FORWARD", 200, -0.75, 400),
     MAX_FORWARD("MAX_REVERSE", -50, 0.75, 400);
 
+
     private final String position;
     private final int encodedPos;
     private final double moveToPositionPower;

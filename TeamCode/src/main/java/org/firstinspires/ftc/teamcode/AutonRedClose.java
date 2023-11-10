@@ -18,9 +18,6 @@ public class AutonRedClose extends AutonBase {
     @Override
     public void runOpMode(){
 
-
-
-
         boolean left = false;
         boolean middle = false;
         boolean right = true;

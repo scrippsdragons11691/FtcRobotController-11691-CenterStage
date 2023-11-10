@@ -55,6 +55,10 @@ public class TeleOpMain extends LinearOpMode {
         RobotControlFlipperMotor flipperMotor = new RobotControlFlipperMotor(theHardwareMap, this);
         RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
         RobotControlGripperServos clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
+        RobotControlGripperServos servoLauncher = new RobotControlGripperServos(theHardwareMap,this,"ServoLauncher");
+
+        //Set the initial value for the Drone Launcher servo
+        servoLauncher.moveToPosition(GripperPositions.DRONE_READY);
 
         lights.switchLight(Light.ALL, LightMode.GREEN);
 
@@ -105,9 +109,6 @@ public class TeleOpMain extends LinearOpMode {
         Gamepad previousGamepad1 = new Gamepad();
         Gamepad previousGamepad2 = new Gamepad();
 
-        //Set front camera up for AcmeTag
-
-
         double currentClaw = 0.8;
         //Main Loop
         while (opModeIsActive()) {
@@ -148,6 +149,16 @@ public class TeleOpMain extends LinearOpMode {
             } else if (currentGamepad1.right_bumper && !previousGamepad1.right_bumper) {
                 slowMode = false;
                 lights.switchLight(Light.LED2, LightMode.YELLOW);
+            }
+
+            //Drone launch
+            if (currentGamepad1.x && !previousGamepad1.x)
+            {
+                servoLauncher.moveToPosition(GripperPositions.DRONE_LAUNCH);
+                telemetry.addData ("Drone Launch",servoLauncher.getCurrentPosition());
+            } else if (!currentGamepad1.x && previousGamepad1.x) {
+                servoLauncher.moveToPosition(GripperPositions.DRONE_READY);
+                telemetry.addData("Drone Reset",servoLauncher.getCurrentPosition());
             }
 
             /***************
@@ -287,6 +298,7 @@ public class TeleOpMain extends LinearOpMode {
             telemetry.addData("looptime", System.currentTimeMillis() - loopTimeStart);
             telemetry.addData("Servo 1: ", clawServo1.getCurrentPosition().getServoPos());
             telemetry.addData("Servo 2: ", clawServo2.getCurrentPosition().getServoPos());
+            telemetry.addData("Drone Launcher: ", servoLauncher.getCurrentPosition().getServoPos());
             telemetry.update();
         }
 
