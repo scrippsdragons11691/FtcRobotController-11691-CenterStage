@@ -3,28 +3,134 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
+import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
+import org.firstinspires.ftc.teamcode.hardware.Light;
+import org.firstinspires.ftc.teamcode.hardware.LightMode;
+
 @Autonomous(name = "Auton Blue Close To Backstage", group = "Autons")
 public class AutonBlueClose extends AutonBase {
 
+    private int     parkingPosition= -1;
+    private int     lastParkingPosition = -1;
     @Override
     public void runOpMode(){
 
+        boolean left = false;
+        boolean middle = false;
+        boolean right = true;
+
         initialize();
+
+        clawServo1.moveToPosition(GripperPositions.GRIPPER1_CLOSED);
+        clawServo2.moveToPosition(GripperPositions.GRIPPER2_CLOSED);
+
+        while (opModeInInit()) {
+            //check that the camera is open and working
+            if (robotCameraHandler.frontCameraIsFaulty.get() && robotCameraHandler.enableFrontCamera)
+                telemetry.addData("Status", "Front camera fault...Please restart");
+            else
+                telemetry.addData("Status", "Front Camera initialized");
+
+            try {
+                parkingPosition = robotCameraHandler.spikeLocationDetectionPipeline.getSpikeLocation().get();
+                telemetry.addData("Parking Position", parkingPosition);
+            } catch (NullPointerException npe) {
+                telemetry.addData("cameras", npe.getMessage());
+            }
+            telemetry.update();
+
+            if (lastParkingPosition != parkingPosition) {
+                if (parkingPosition == 1) {
+                    lights.switchLight(Light.LED1, LightMode.RED);
+                } else if (parkingPosition == 2) {
+                    lights.switchLight(Light.LED1, LightMode.YELLOW);
+                } else if (parkingPosition == 3) {
+                    lights.switchLight(Light.LED1, LightMode.GREEN);
+                } else if (parkingPosition == 0) {
+                    lights.switchLight(Light.LED1, LightMode.OFF);
+                }
+                lastParkingPosition = parkingPosition;
+            }
+        }
+
         waitForStart();
 
-        //move the arm with the claw to the up position so that it does not drag on the floor position
-        //theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //theHardwareMap.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //theHardwareMap.armMotor.setTargetPosition(90);
+        //Set the arm position up to not drag
+        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+        sleep(1000);
 
-        imuDrive(.5, 23, 0);
-        sleep(2000);
-        imuTurn(.75, -87);
-        imuDrive(0.5, 30, 0);
-        sleep(5000);
-        encoderStrafe(0.5, 26, 5);
-        imuDrive(0.5, 13, 0);
+        //Left
+        if(parkingPosition == 1){
+            imuDrive(.4, 5, 0);
+            encoderStrafe(0.25,-10.75,5);
+            imuDrive(0.25, 25, 0);
+            imuDrive(.25,-6,0);
 
+            //move arm down to deliver
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
+            sleep(500);
+            clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
+            sleep(1000);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(1000);
 
+            //drive to deliver pixel
+            imuDrive(0.25, -5.5, 0);
+            encoderStrafe(0.5, -35, 5);
+            imuDrive(0.5, -13, 0);
+        }
+        //Middle
+        else if(parkingPosition == 2){
+            imuDrive(.3, 36, 0);
+            sleep(750);
+            imuDrive(.15, -5, 0);
+
+            //move arm down to deliver
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
+            sleep(500);
+            clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
+            sleep(1000);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(1000);
+
+            //drive to deliver pixel
+            imuDrive(.15, -8, 0);
+            imuTurn(.75, 90);
+            imuDrive(0.5, -40, 0);
+            encoderStrafe(0.5,25,5);
+        }
+        //Right
+        else if(parkingPosition == 3){
+            imuDrive(.4, 29.5, 0);
+            imuTurn(.3, 90);
+            imuDrive(.25, 7, 0);
+            imuDrive(.15, -3, 0);
+
+            //move arm down to deliver
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
+            sleep(500);
+            clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
+            sleep(500);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(500);
+
+            //drive towards pixel
+            imuDrive(.4, -20, 0);
+            imuTurn(.25, -15);
+            imuDrive(.25, -14.5, 0);
+            imuTurn(.25, 15);
+            imuDrive(.25, -11, 0);
+            encoderStrafe(0.5,25,5);
+        }
+        //Error unable to find target so slide to backdrop
+        else{
+            imuDrive(.5, 5, 0);
+            encoderStrafe(0.5, -47, 5);
+            telemetry.addData("Park Position Unknown",parkingPosition);
+        }
+
+        //set arm down in the end
+        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
     }
 }

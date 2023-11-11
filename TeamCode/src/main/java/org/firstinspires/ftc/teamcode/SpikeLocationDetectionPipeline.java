@@ -17,8 +17,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpikeLocationDetectionPipeline extends OpenCvPipeline {
 
+    //public Scalar lowerRedCone = new Scalar(35.9, 149.2, 5.7);
+    //public Scalar upperRedCone = new Scalar(150.2, 203.1, 255);
     public Scalar lowerRedCone = new Scalar(35.9, 149.2, 5.7);
-    public Scalar upperRedCone = new Scalar(150.2, 203.1, 255);
+    public Scalar upperRedCone = new Scalar(160, 203.1, 255);
     public Scalar lowerBlueCone = new Scalar(0, 0, 136.0);
     public Scalar upperBlueCone = new Scalar(255, 255, 194.1);
     int numRedCones = 0;

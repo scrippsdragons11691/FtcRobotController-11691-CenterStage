@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 public enum ArmPositions {
-
     UNKNOWN("UNKNOWN", -1, 0, 0),
     FRONT_ARC_MIN("FRONT_ARC_MIN", 10, 0, 0),
     FRONT_ARC_STRAIGHT("FRONT_ARC_STRAIGHT", 150, 0, 0),
-    FRONT_ARC_ZERO("FRONT_ARC_ZERO", 106, 0, 0),
+    //ZERO is the drive position  70 as a heigh makes sure we move the prop out of the way during auton
+    FRONT_ARC_ZERO("FRONT_ARC_ZERO", 60, 0, 0),
     FRONT_ARC_NINETY("FRONT_ARC_NINETY", 443, 0, 0),
     FRONT_ARC_TOP("FRONT_ARC_TOP", 500, 0, 0),
     FRONT_ARC_BOTTOM("FRONT_ARC_BOTTOM", 400, 0, 0),
