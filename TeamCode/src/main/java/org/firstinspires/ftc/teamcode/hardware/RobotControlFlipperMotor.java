@@ -5,7 +5,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotHardwareMap;
@@ -22,7 +21,7 @@ public class RobotControlFlipperMotor {
     ControlModes mode = ControlModes.MANUAL;
     FlipperMotorPositions flipperTargetPosition = FlipperMotorPositions.UNKNOWN;
     FlipperMotorPositions flipperCurrentPosition = FlipperMotorPositions.UNKNOWN;
-    FlipperPotentiometer flipperPotentiometer;
+    RobotControlFlipperPotentiometer robotControlFlipperPotentiometer;
 
     public RobotControlFlipperMotor(RobotHardwareMap robotHardwareMap, LinearOpMode opMode){
         this.opMode = opMode;
@@ -33,7 +32,7 @@ public class RobotControlFlipperMotor {
     public void initialize(){
         try {
             flipperMotor = robotHardwareMap.baseHMap.get(DcMotorEx.class, "CR");
-            flipperPotentiometer = new FlipperPotentiometer(robotHardwareMap, opMode, "potentiometer");
+            robotControlFlipperPotentiometer = new RobotControlFlipperPotentiometer(robotHardwareMap, opMode, "potentiometer");
             flipperMotor.setPower(0);
             flipperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             flipperMotor.setDirection(DcMotorEx.Direction.REVERSE);
@@ -79,10 +78,10 @@ public class RobotControlFlipperMotor {
                 //telemetry.addData("flipperPowerStop:", power  + " pos " + flipperPosition);
                 stopFlipper();
             }*/
-            double flipperPosition = flipperPotentiometer.getCurrentPotPosition();
+            double flipperPosition = robotControlFlipperPotentiometer.getCurrentPotPosition();
             double clawPowerReducer = 0.3;
             //since we're in manual mode, run without encoder
-            telemetry.addData("Potentiometer Position: ", flipperPotentiometer.getCurrentPotPosition());
+            telemetry.addData("Potentiometer Position: ", robotControlFlipperPotentiometer.getCurrentPotPosition());
 
             flipperMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 

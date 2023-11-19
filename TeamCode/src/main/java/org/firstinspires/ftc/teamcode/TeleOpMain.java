@@ -1,21 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Log;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.exception.RobotCoreException;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import org.checkerframework.checker.units.qual.A;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
-import org.firstinspires.ftc.teamcode.hardware.FlipperMotorPositions;
-import org.firstinspires.ftc.teamcode.hardware.FlipperPotentiometer;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperPotentiometer;
 import org.firstinspires.ftc.teamcode.hardware.FlipperPotentiometerPositions;
 import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlArm;
@@ -28,11 +25,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.teamcode.hardware.Light;
 import org.firstinspires.ftc.teamcode.hardware.LightMode;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.TempUnit;
 
-import java.io.IOException;
 import java.util.List;
 
 @TeleOp
@@ -58,7 +51,11 @@ public class TeleOpMain extends LinearOpMode {
         RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
         RobotControlGripperServos clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
         RobotControlGripperServos servoLauncher = new RobotControlGripperServos(theHardwareMap,this,"ServoLauncher");
-        FlipperPotentiometer flipperPotentiometer = new FlipperPotentiometer(theHardwareMap, this, "potentiometer");
+        RobotControlFlipperPotentiometer robotControlFlipperPotentiometer = new RobotControlFlipperPotentiometer(theHardwareMap, this, "potentiometer");
+        AutonBase autonBase = new AutonBase();
+
+        DistanceSensor distanceSensor = theHardwareMap.baseHMap.get(DistanceSensor.class, "distance");
+        final int DISTANCE_FROM_BACKBOARD = 2;
 
         //Set the initial value for the Drone Launcher servo
         servoLauncher.moveToPosition(GripperPositions.DRONE_READY);
@@ -164,11 +161,27 @@ public class TeleOpMain extends LinearOpMode {
                 telemetry.addData("Drone Reset",servoLauncher.getCurrentPosition());
             }
 
+            //Distance Sensor Alignment
+            //TODO: Add functionality with April Tags
+            //TODO: Make sure you can run auton functionality in TeleOp
+            if (currentGamepad1.a){
+                double currentDistance = distanceSensor.getDistance(DistanceUnit.INCH);
+                if (currentDistance > DISTANCE_FROM_BACKBOARD){
+                    autonBase.imuDrive(0.5, -(currentDistance - DISTANCE_FROM_BACKBOARD), 0);
+                }
+                else if (currentDistance < DISTANCE_FROM_BACKBOARD){
+                    autonBase.imuDrive(0.5, currentDistance - DISTANCE_FROM_BACKBOARD, 0);
+                }
+                else {
+                    autonBase.imuDrive(0, 0, 0);
+                }
+            }
+
             /***************
              * Gamepad 2
              */
 
-            telemetry.addData("Pot Position", flipperPotentiometer.getCurrentPotPosition());
+            telemetry.addData("Pot Position", robotControlFlipperPotentiometer.getCurrentPotPosition());
 
             //Open/close claw1
             if (currentGamepad2.left_bumper)
@@ -231,20 +244,20 @@ public class TeleOpMain extends LinearOpMode {
 
             if (currentGamepad2.a && !previousGamepad2.a){
 //                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_DOWN);
-                flipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_DOWN, flipperMotor, 0.5);
+                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_DOWN, flipperMotor, 0.5);
             }
             if (currentGamepad2.x && !previousGamepad2.x){
 //                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_UP);
-                flipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_PLACE, flipperMotor, 0.5);
+                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_PLACE, flipperMotor, 0.5);
             }
 
             if (currentGamepad2.b && !previousGamepad2.b){
 //                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_DOWN);
-                flipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_DOWN, flipperMotor, 0.5);
+                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_DOWN, flipperMotor, 0.5);
             }
             if (currentGamepad2.y && !previousGamepad2.y){
 //                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_UP);
-                flipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_PLACE, flipperMotor, 0.5);
+                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_PLACE, flipperMotor, 0.5);
             }
 
 

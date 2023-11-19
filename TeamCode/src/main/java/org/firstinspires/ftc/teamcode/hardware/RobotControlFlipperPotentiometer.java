@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 
 import org.firstinspires.ftc.teamcode.RobotHardwareMap;
 
-public class FlipperPotentiometer {
+public class RobotControlFlipperPotentiometer {
     RobotHardwareMap robotHardwareMap;
     LinearOpMode opMode;
     String potentiometerLocation = "potentiometer";
     AnalogInput potentiometer;
 
-    public FlipperPotentiometer(RobotHardwareMap robotHardwareMap, LinearOpMode opMode, String potentiometerLocation){
+    public RobotControlFlipperPotentiometer(RobotHardwareMap robotHardwareMap, LinearOpMode opMode, String potentiometerLocation){
         this.opMode = opMode;
         this.robotHardwareMap = robotHardwareMap;
         this.potentiometerLocation = potentiometerLocation;
