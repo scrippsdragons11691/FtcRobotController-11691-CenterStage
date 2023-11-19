@@ -15,6 +15,8 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
 import org.firstinspires.ftc.teamcode.hardware.FlipperMotorPositions;
+import org.firstinspires.ftc.teamcode.hardware.FlipperPotentiometer;
+import org.firstinspires.ftc.teamcode.hardware.FlipperPotentiometerPositions;
 import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlArm;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperMotor;
@@ -56,6 +58,7 @@ public class TeleOpMain extends LinearOpMode {
         RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
         RobotControlGripperServos clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
         RobotControlGripperServos servoLauncher = new RobotControlGripperServos(theHardwareMap,this,"ServoLauncher");
+        FlipperPotentiometer flipperPotentiometer = new FlipperPotentiometer(theHardwareMap, this, "potentiometer");
 
         //Set the initial value for the Drone Launcher servo
         servoLauncher.moveToPosition(GripperPositions.DRONE_READY);
@@ -165,6 +168,8 @@ public class TeleOpMain extends LinearOpMode {
              * Gamepad 2
              */
 
+            telemetry.addData("Pot Position", flipperPotentiometer.getCurrentPotPosition());
+
             //Open/close claw1
             if (currentGamepad2.left_bumper)
             {
@@ -225,17 +230,21 @@ public class TeleOpMain extends LinearOpMode {
 
 
             if (currentGamepad2.a && !previousGamepad2.a){
-                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_DOWN);
+//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_DOWN);
+                flipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_DOWN, flipperMotor, 0.5);
             }
             if (currentGamepad2.x && !previousGamepad2.x){
-                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_UP);
+//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_UP);
+                flipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_PLACE, flipperMotor, 0.5);
             }
 
             if (currentGamepad2.b && !previousGamepad2.b){
-                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_DOWN);
+//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_DOWN);
+                flipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_DOWN, flipperMotor, 0.5);
             }
             if (currentGamepad2.y && !previousGamepad2.y){
-                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_UP);
+//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_UP);
+                flipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_PLACE, flipperMotor, 0.5);
             }
 
 

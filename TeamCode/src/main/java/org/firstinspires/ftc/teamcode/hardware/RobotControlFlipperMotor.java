@@ -22,6 +22,7 @@ public class RobotControlFlipperMotor {
     ControlModes mode = ControlModes.MANUAL;
     FlipperMotorPositions flipperTargetPosition = FlipperMotorPositions.UNKNOWN;
     FlipperMotorPositions flipperCurrentPosition = FlipperMotorPositions.UNKNOWN;
+    FlipperPotentiometer flipperPotentiometer;
 
     public RobotControlFlipperMotor(RobotHardwareMap robotHardwareMap, LinearOpMode opMode){
         this.opMode = opMode;
@@ -32,6 +33,7 @@ public class RobotControlFlipperMotor {
     public void initialize(){
         try {
             flipperMotor = robotHardwareMap.baseHMap.get(DcMotorEx.class, "CR");
+            flipperPotentiometer = new FlipperPotentiometer(robotHardwareMap, opMode, "potentiometer");
             flipperMotor.setPower(0);
             flipperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             flipperMotor.setDirection(DcMotorEx.Direction.REVERSE);
@@ -59,6 +61,7 @@ public class RobotControlFlipperMotor {
 
         //only try moving the arm if initialized
         if (flipperInitialized) {
+            /*
             double flipperPosition = flipperMotor.getCurrentPosition();
             double clawPowerReducer = 0.3;
             //since we're in manual mode, run without encoder
@@ -74,6 +77,22 @@ public class RobotControlFlipperMotor {
                 flipperMotor.setPower(power * clawPowerReducer);
             } else {
                 //telemetry.addData("flipperPowerStop:", power  + " pos " + flipperPosition);
+                stopFlipper();
+            }*/
+            double flipperPosition = flipperPotentiometer.getCurrentPotPosition();
+            double clawPowerReducer = 0.3;
+            //since we're in manual mode, run without encoder
+            telemetry.addData("Potentiometer Position: ", flipperPotentiometer.getCurrentPotPosition());
+
+            flipperMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+
+            if (power > 0
+                    && flipperPosition < FlipperPotentiometerPositions.MAX_VOLTAGE.getVoltagePos()) {
+                flipperMotor.setPower(power * clawPowerReducer);
+            } else if (power < 0
+                    && flipperPosition > FlipperPotentiometerPositions.MIN_VOLTAGE.getVoltagePos()){
+                flipperMotor.setPower(power * clawPowerReducer);
+            } else {
                 stopFlipper();
             }
         }
