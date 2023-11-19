@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Light;
 import org.firstinspires.ftc.teamcode.hardware.LightMode;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlArm;
@@ -30,6 +31,7 @@ public class AutonBase extends LinearOpMode {
     RobotHardwareMap theHardwareMap;
     AprilTagProcessor aprilTagProcessor;
     VisionPortal visionPortal;
+    SampleMecanumDrive drive;
 
     private IMU imu         = null;
 
@@ -72,6 +74,7 @@ public class AutonBase extends LinearOpMode {
         theHardwareMap  = new RobotHardwareMap(hardwareMap, this);
         robotCameraHandler = new RobotCameraHandler(theHardwareMap, this);
         lights = new RobotControlLights(theHardwareMap, this);
+        drive = new SampleMecanumDrive(hardwareMap);
 
         theHardwareMap.initialize();
         robotCameraHandler.initialize();
