@@ -55,7 +55,7 @@ public class TeleOpMain extends LinearOpMode {
         AutonBase autonBase = new AutonBase();
 
         DistanceSensor distanceSensor = theHardwareMap.baseHMap.get(DistanceSensor.class, "distance");
-        final int DISTANCE_FROM_BACKBOARD = 2;
+        final int DISTANCE_FROM_BACKBOARD = 7;
 
         //Set the initial value for the Drone Launcher servo
         servoLauncher.moveToPosition(GripperPositions.DRONE_READY);
@@ -180,8 +180,6 @@ public class TeleOpMain extends LinearOpMode {
             /***************
              * Gamepad 2
              */
-
-            telemetry.addData("Pot Position", robotControlFlipperPotentiometer.getCurrentPotPosition());
 
             //Open/close claw1
             if (currentGamepad2.left_bumper)
@@ -317,6 +315,7 @@ public class TeleOpMain extends LinearOpMode {
             }
             armMotor.addArmTelemetry();
             flipperMotor.addFlipperTelemetry();
+            telemetry.addData("Pot Position", robotControlFlipperPotentiometer.getCurrentPotPosition());
             telemetry.addData("looptime", System.currentTimeMillis() - loopTimeStart);
             telemetry.addData("Servo 1: ", clawServo1.getCurrentPosition().getServoPos());
             telemetry.addData("Servo 2: ", clawServo2.getCurrentPosition().getServoPos());

@@ -67,14 +67,15 @@ public class RobotControlArm {
             double floatPower = 0.15;
 
             //if moving up and under apex, then do positive power to move up
+
             if (power > 0
-                    && currentPosition < ArmPositions.FRONT_ARC_TOP.getEncodedPos()) {
+                    && currentPosition <= ArmPositions.FRONT_ARC_TOP.getEncodedPos()) {
                 Log.d(TAG, "moving up  " + currentPosition + " " + power);
                 armMotor.setPower(upPowerFactor * power);
 
                 //if moving down and over apex, then do negative power to move back
             } else if (power < 0
-                    && currentPosition > ArmPositions.FRONT_ARC_TOP.getEncodedPos()) {
+                    && currentPosition >= ArmPositions.RETURN_ARC_TOP.getEncodedPos()) {
                 Log.d(TAG, "moving up from other side  " + currentPosition + " " + power);
                 armMotor.setPower(upPowerFactor * power);
 
@@ -88,12 +89,13 @@ public class RobotControlArm {
             } else if (power > 0
                     && currentPosition > ArmPositions.BACK_ARC_TOP.getEncodedPos()) {
                 Log.d(TAG, "slowing down  " + currentPosition + " " + power);
-                armMotor.setPower(-floatPower);
+                armMotor.setPower(floatPower);
 
             } else {
                 Log.d(TAG, "moving no power  " + currentPosition + " " + power);
                 armMotor.setPower(0);
             }
+
         }
 
     }
@@ -109,7 +111,7 @@ public class RobotControlArm {
     }
 
     public void stopArmWithHold(){
-        if (armInitialized){
+        if (armInitialized) {
 
             if (mode == ControlModes.MANUAL) {
                 //hold code
@@ -123,14 +125,14 @@ public class RobotControlArm {
                     Log.d(TAG, "holding... " + currentPosition);
 
                     //hold in back of robot
-                } else if (currentPosition > ArmPositions.FRONT_ARC_TOP.getEncodedPos()
+                } /*else if (currentPosition > ArmPositions.FRONT_ARC_TOP.getEncodedPos()
                         && currentPosition < ArmPositions.BACK_ARC_MAX.getEncodedPos()) {
 
                     armMotor.setPower(-holdPower);
                     Log.d(TAG, "negative holding..." + currentPosition);
 
                     //not in a good position for holding
-                } else {
+                }*/ else {
                     armMotor.setPower(0);
                     Log.d(TAG, "stopped... " + currentPosition);
                 }
