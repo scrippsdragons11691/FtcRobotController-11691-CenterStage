@@ -130,14 +130,14 @@ public class TeleOpMain extends LinearOpMode {
 
             //Speed values for slow mode
             if (slowMode) {
-                drive *= 0.5;
-                strafe *= 0.5;
-                twist *= 0.5;
+                drive *= 0.6;
+                strafe *= 0.6;
+                twist *= 0.6;
 
             } else { // non slow mode is only 75% power
-                drive *= 0.75;
-                strafe *= 0.75;
-                twist *= 0.75;
+                drive *= 1;
+                strafe *= 1;
+                twist *= 1;
             }
 
             robotDrive.teleOpMechanum(drive, strafe, twist);

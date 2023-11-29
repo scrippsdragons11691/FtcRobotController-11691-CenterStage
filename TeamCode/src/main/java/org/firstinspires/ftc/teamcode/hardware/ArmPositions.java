@@ -11,7 +11,7 @@ public enum ArmPositions {
     FRONT_ARC_TOP("FRONT_ARC_TOP", 1270, 0, 0),
     FRONT_ARC_BOTTOM("FRONT_ARC_BOTTOM", 1270, 0, 0),
     //Apply full power greater than this distance
-    RETURN_ARC_TOP("RETURN_ARC_BOTTOM", 1100, 0, 0),
+    RETURN_ARC_TOP("RETURN_ARC_BOTTOM", /*1100*/350, 0, 0),
     BACK_ARC_TOP("BACK_ARC_TOP", 1270, 0, 0),
     BACK_ARC_MAX("BACK_ARC_MAX", 1850, 0, 0);
 
