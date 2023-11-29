@@ -62,7 +62,7 @@ public class RobotControlFlipperMotor {
         if (flipperInitialized) {
 
             double flipperPosition = flipperMotor.getCurrentPosition();
-            double clawPowerReducer = 0.1;
+            double clawPowerReducer = 0.2;
             //since we're in manual mode, run without encoder
             flipperMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
