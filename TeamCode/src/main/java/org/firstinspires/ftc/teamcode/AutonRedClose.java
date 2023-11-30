@@ -76,15 +76,19 @@ public class AutonRedClose extends AutonBase {
             sleep(500);
 
             //drive towards pixel
-            imuDrive(.4, -20, 0);
-            imuTurn(.25, -15);
-            imuDrive(.25, -14.5, 0);
-            imuTurn(.25, 15);
-            imuDrive(.25, -15, 0);
+            imuDrive(.2, -20, 0);
+            imuTurn(.15, -15);
+            imuDrive(.15, -14.5, 0);
+            imuTurn(.15, 15);
 
             //deposit back pixel
             armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
-            sleep(500);
+            sleep(1000);
+            //move the flipper to -49
+            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
+            sleep(250);
+            imuDrive(.15, -9.00, 0);
+            sleep(250);
             clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
 
             //slide out of the way

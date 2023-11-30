@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 public enum GripperPositions {
 
     UNKNOWN("UNKNOWN", 0),
-    GRIPPER1_OPEN("GRIPPER1_OPEN", 0.84),
+    GRIPPER1_OPEN("GRIPPER1_OPEN", 0.89),
     GRIPPER1_CLOSED("GRIPPER1_CLOSED", 0.6),
     GRIPPER2_OPEN("GRIPPER2_OPEN", 0.15),
     GRIPPER2_CLOSED("GRIPPER2_CLOSED", 0.025),

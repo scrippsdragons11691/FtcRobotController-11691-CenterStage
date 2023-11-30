@@ -63,7 +63,7 @@ public class AutonBlueClose extends AutonBase {
         //Left
         if(parkingPosition == 1){
             imuDrive(.4, 5, 0);
-            encoderStrafe(0.25,-10.75,5);
+            encoderStrafe(0.25,-11.75,5);
             imuDrive(0.25, 25, 0);
             imuDrive(.25,-6,0);
 
