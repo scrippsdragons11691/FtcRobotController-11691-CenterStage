@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
+import org.firstinspires.ftc.teamcode.hardware.FlipperMotorPositions;
 import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
 import org.firstinspires.ftc.teamcode.hardware.Light;
 import org.firstinspires.ftc.teamcode.hardware.LightMode;
@@ -78,7 +79,19 @@ public class AutonBlueFar extends AutonBase {
             imuDrive(0.25, -5.5, 0);
             imuTurn(0.5,180);
             encoderStrafe(0.5, -29, 5);
-            imuDrive(0.5, -93, 0);
+            imuDrive(0.5, -85, 0);
+            encoderStrafe(0.25, 43, 5);
+
+            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+            sleep(500);
+            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
+            sleep(250);
+            imuDrive(.15, -5.5, 0);
+            sleep(250);
+            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
+            sleep(250);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(250);
         }
         //Middle
         else if(parkingPosition == 2){
@@ -99,7 +112,20 @@ public class AutonBlueFar extends AutonBase {
             encoderStrafe(.5,12,5);
             imuDrive(.5,30,0);
             imuTurn(.75, 90);
-            imuDrive(0.5, -100, 0);
+            imuDrive(0.5, -94, 0);
+            encoderStrafe(0.25, 25, 5);
+
+            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+            sleep(500);
+            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
+            sleep(300);
+            imuDrive(.15, -4, 0);
+            sleep(250);
+            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
+            sleep(250);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(250);
+
 
         }
         //Right
@@ -107,7 +133,7 @@ public class AutonBlueFar extends AutonBase {
             imuDrive(.4, 29.5, 0);
             imuTurn(.3, 90);
             imuDrive(.25, 7, 0);
-            imuDrive(.15, -3, 0);
+            imuDrive(.15, -4, 0);
 
             //move arm down to deliver
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
@@ -120,7 +146,20 @@ public class AutonBlueFar extends AutonBase {
             //drive towards back
             imuDrive(.5, -3.5, 0);
             encoderStrafe(0.5,-28,5);
-            imuDrive(.5,-85,0);
+            imuDrive(.5,-84,0);
+            sleep(250);
+            encoderStrafe(0.5, 20, 5);
+
+            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+            sleep(500);
+            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
+            sleep(300);
+            imuDrive(.15, -7, 0);
+            sleep(250);
+            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
+            sleep(250);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(250);
         }
         //Error unable to find target so slide to backdrop
         else{

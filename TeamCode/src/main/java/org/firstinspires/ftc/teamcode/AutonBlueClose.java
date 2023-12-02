@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
+import org.firstinspires.ftc.teamcode.hardware.FlipperMotorPositions;
 import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
 import org.firstinspires.ftc.teamcode.hardware.Light;
 import org.firstinspires.ftc.teamcode.hardware.LightMode;
@@ -78,7 +79,23 @@ public class AutonBlueClose extends AutonBase {
             //drive to deliver pixel
             imuDrive(0.25, -5.5, 0);
             encoderStrafe(0.5, -35, 5);
-            imuDrive(0.5, -13, 0);
+            imuTurn(0.5, 90);
+
+            //deliver pixel
+            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+            sleep(500);
+            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
+            sleep(250);
+            imuDrive(.15, -.5, 0);
+            sleep(250);
+            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
+            sleep(250);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(250);
+
+            //park
+            encoderStrafe(0.5, 15, 5);
+            sleep(250);
         }
         //Middle
         else if(parkingPosition == 2){
@@ -97,8 +114,21 @@ public class AutonBlueClose extends AutonBase {
             //drive to deliver pixel
             imuDrive(.15, -8, 0);
             imuTurn(.75, 90);
-            imuDrive(0.5, -40, 0);
-            encoderStrafe(0.5,25,5);
+            imuDrive(0.5, -37.5, 0);
+            encoderStrafe(0.25, -2.5, 5);
+
+            //deploy back pixel
+            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+            sleep(500);
+            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
+            sleep(250);
+            sleep(250);
+            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
+            sleep(250);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(250);
+
+            encoderStrafe(0.5,30,5);
         }
         //Right
         else if(parkingPosition == 3){
@@ -116,12 +146,24 @@ public class AutonBlueClose extends AutonBase {
             sleep(500);
 
             //drive towards pixel
-            imuDrive(.4, -20, 0);
-            imuTurn(.25, -15);
-            imuDrive(.25, -14.5, 0);
-            imuTurn(.25, 15);
-            imuDrive(.25, -11, 0);
-            encoderStrafe(0.5,25,5);
+            imuDrive(.2, -20, 0);
+            encoderStrafe(0.5,-6.5,5);
+            imuDrive(.15, -14.5, 0);
+
+            //deposit back pixel
+            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+            sleep(500);
+            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
+            sleep(250);
+            imuDrive(.15, -9.00, 0);
+            sleep(250);
+            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
+            sleep(250);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(250);
+
+            //slide out of the way
+            encoderStrafe(0.5,35,5);
         }
         //Error unable to find target so slide to backdrop
         else{

@@ -77,27 +77,23 @@ public class AutonRedClose extends AutonBase {
 
             //drive towards pixel
             imuDrive(.2, -20, 0);
-            imuTurn(.15, -15);
+            encoderStrafe(0.5,5.5,5);
             imuDrive(.15, -14.5, 0);
-            imuTurn(.15, 15);
 
             //deposit back pixel
             armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
-            sleep(1000);
-            //move the flipper to -49
+            sleep(500);
             flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
             sleep(250);
             imuDrive(.15, -9.00, 0);
             sleep(250);
             clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
+            sleep(250);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(250);
 
             //slide out of the way
-            //imuDrive(.25, 5, 0);
-            //imuTurn(0.75, 90);
-            //imuDrive(.5, 16, 0);
-            //imuTurn(0.75, 90);
-            //imuDrive(0.5, 15, 0);
-
+            encoderStrafe(0.5,-35,5);
         }
         //Middle
         else if(parkingPosition == 2){
@@ -116,13 +112,30 @@ public class AutonRedClose extends AutonBase {
             //drive to deliver pixel
             imuDrive(.25, -8, 0);
             imuTurn(.75, -90);
-            imuDrive(.5, -40, 0);
+            imuDrive(.5, -10, 0);
+
+            encoderStrafe(.25,7,5);
+            imuDrive(.15, -20, 0);
+
+            //deposit back pixel
+            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+            sleep(500);
+            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
+            sleep(250);
+            imuDrive(.15, -9.00, 0);
+            sleep(250);
+            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
+            sleep(250);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(250);
+
+            //part out of the way
             encoderStrafe(.5,-25,5);
         }
         //Right
         else if(parkingPosition == 3){
             imuDrive(.4, 5, 0);
-            encoderStrafe(0.25,10.75,5);
+            encoderStrafe(0.25,12.5,5);
             //imuTurn(0.4, 61);
             imuDrive(0.25, 25, 0);
             imuDrive(.25,-6,0);
@@ -131,14 +144,30 @@ public class AutonRedClose extends AutonBase {
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
             sleep(500);
             clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
-            sleep(1000);
+            sleep(750);
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
             sleep(1000);
 
             //drive to deliver pixel
-            imuDrive(0.25, -5.5, 0);
-            encoderStrafe(0.5, 35, 5);
-            imuDrive(0.5, -13, 0);
+            imuDrive(0.25, -4, 0);
+            encoderStrafe(0.5, 34, 5);
+            imuTurn(0.5, -90);
+
+            //deliver pixel
+            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+            sleep(500);
+            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
+            sleep(250);
+            imuDrive(.15, -.5, 0);
+            sleep(250);
+            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
+            sleep(250);
+            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+            sleep(250);
+
+            //park
+            encoderStrafe(0.5, -15, 5);
+            sleep(250);
         }
         //Error unable to find target so slide to backdrop
         else{
