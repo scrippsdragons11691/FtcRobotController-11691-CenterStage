@@ -91,7 +91,7 @@ public class AutonRedFar extends AutonBase {
             clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
             sleep(250);
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-            sleep(250);
+            sleep(1000);
         }
         //Middle
         else if(parkingPosition == 2){
@@ -124,7 +124,7 @@ public class AutonRedFar extends AutonBase {
             clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
             sleep(250);
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-            sleep(250);
+            sleep(1000);
 
         }
         //Right
@@ -158,7 +158,7 @@ public class AutonRedFar extends AutonBase {
             clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
             sleep(250);
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-            sleep(250);
+            sleep(1000);
         }
         //Error unable to find target so slide to backdrop
         else{

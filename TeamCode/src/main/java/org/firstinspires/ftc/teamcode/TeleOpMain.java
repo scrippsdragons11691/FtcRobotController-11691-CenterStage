@@ -263,7 +263,7 @@ public class TeleOpMain extends LinearOpMode {
             lights.switchLight(Light.LED1, LightMode.OFF);
             //telemetry.clear();
 
-            if (currentGamepad1.x) {
+            if (1 == 0) {
 
                 List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
 

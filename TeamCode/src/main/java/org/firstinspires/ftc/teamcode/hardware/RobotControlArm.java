@@ -93,7 +93,7 @@ public class RobotControlArm {
 
             } else {
                 Log.d(TAG, "moving no power  " + currentPosition + " " + power);
-                armMotor.setPower(0);
+                armMotor.setPower(power * upPowerFactor);
             }
 
         }
