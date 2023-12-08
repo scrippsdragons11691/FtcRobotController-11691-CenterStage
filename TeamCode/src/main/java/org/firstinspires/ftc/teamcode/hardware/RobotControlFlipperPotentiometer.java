@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 
@@ -23,11 +25,14 @@ public class RobotControlFlipperPotentiometer {
     }
 
     public void moveToPosition(FlipperPotentiometerPositions flipperPotentiometerPositions, RobotControlFlipperMotor flipperMotor, double power){
+        Log.println(Log.INFO, "Flipper Encoder: ", String.valueOf(flipperMotor.getCurrentPosition()));
+        Log.println(Log.INFO, "Pot: ", String.valueOf(potentiometer.getVoltage()));
+
         if (getCurrentPotPosition() > flipperPotentiometerPositions.getVoltagePos()){
-            flipperMotor.moveFlipperPower(-power);
+            flipperMotor.moveFlipperPowerPot(-power);
         }
         else if(getCurrentPotPosition() < flipperPotentiometerPositions.getVoltagePos()){
-            flipperMotor.moveFlipperPower(power);
+            flipperMotor.moveFlipperPowerPot(power);
         }
         else{
             flipperMotor.moveFlipperPower(0);

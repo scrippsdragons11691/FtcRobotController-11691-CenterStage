@@ -44,6 +44,7 @@ public class RobotHardwareMap {
     public DcMotorEx frontRightMotor;
     public DcMotorEx clawRotator;
     public DcMotorEx armMotor;
+    public DcMotorEx lifterMotor;
     public DigitalChannel LED1Green;
     public DigitalChannel LED1Red;
     public DigitalChannel LED2Green;
@@ -84,6 +85,7 @@ public class RobotHardwareMap {
         backRightMotor = baseHMap.get(DcMotorEx.class, "RR");
         frontLeftMotor = baseHMap.get(DcMotorEx.class, "FL");
         frontRightMotor = baseHMap.get(DcMotorEx.class, "FR");
+        lifterMotor = baseHMap.get(DcMotorEx.class, "Lifter");
 
         //Camera
         try {

@@ -153,4 +153,8 @@ public class RobotControlArm {
             telemetry.addData("armEncoder:", "Uninitialized!");
         }
     }
+
+    public double getArmEncodedPosition(){
+        return armMotor.getCurrentPosition();
+    }
 }

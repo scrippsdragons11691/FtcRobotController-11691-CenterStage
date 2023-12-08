@@ -62,7 +62,7 @@ public class RobotControlFlipperMotor {
         if (flipperInitialized) {
 
             double flipperPosition = flipperMotor.getCurrentPosition();
-            double clawPowerReducer = 0.2;
+            double clawPowerReducer = 0.3;
             //since we're in manual mode, run without encoder
             flipperMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -78,9 +78,17 @@ public class RobotControlFlipperMotor {
                 //telemetry.addData("flipperPowerStop:", power  + " pos " + flipperPosition);
                 stopFlipper();
             }
-            /*
+        }
+    }
+
+    public void moveFlipperPowerPot(double power ){
+        mode = ControlModes.MANUAL;
+        flipperCurrentPosition = FlipperMotorPositions.UNKNOWN;
+
+        //only try moving the arm if initialized
+        if (flipperInitialized) {
             double flipperPosition = robotControlFlipperPotentiometer.getCurrentPotPosition();
-            double clawPowerReducer = 0.3;
+            double clawPowerReducer = 0.5;
             //since we're in manual mode, run without encoder
             telemetry.addData("Potentiometer Position: ", robotControlFlipperPotentiometer.getCurrentPotPosition());
 
@@ -94,7 +102,7 @@ public class RobotControlFlipperMotor {
                 flipperMotor.setPower(power * clawPowerReducer);
             } else {
                 stopFlipper();
-            }*/
+            }
         }
     }
 
