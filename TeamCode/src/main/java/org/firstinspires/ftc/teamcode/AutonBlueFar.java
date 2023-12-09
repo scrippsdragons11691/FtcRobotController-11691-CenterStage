@@ -58,7 +58,8 @@ public class AutonBlueFar extends AutonBase {
 
         //Set the arm position up to not drag
         armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-        sleep(1000);
+        sleep(2000);
+        telemetry.addData("Arm Encoder: ", String.valueOf(armMotor.getArmEncodedPosition()));
 
         //Left
         if(parkingPosition == 1){
@@ -100,8 +101,6 @@ public class AutonBlueFar extends AutonBase {
             imuDrive(.15, -3, 0);
 
             //move arm down to deliver
-            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
-            sleep(500);
             clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
             sleep(1000);
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
@@ -113,7 +112,7 @@ public class AutonBlueFar extends AutonBase {
             imuDrive(.5,30,0);
             imuTurn(.75, 90);
             imuDrive(0.5, -94, 0);
-            encoderStrafe(0.25, 25, 5);
+            encoderStrafe(0.25, 27, 5);
 
             armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
             sleep(500);
@@ -133,7 +132,7 @@ public class AutonBlueFar extends AutonBase {
             imuDrive(.4, 29.5, 0);
             imuTurn(.3, 90);
             imuDrive(.25, 7, 0);
-            imuDrive(.15, -4, 0);
+            imuDrive(.15, -2.75, 0);
 
             //move arm down to deliver
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
@@ -154,7 +153,7 @@ public class AutonBlueFar extends AutonBase {
             sleep(500);
             flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
             sleep(300);
-            imuDrive(.15, -7, 0);
+            imuDrive(.15, -3.5, 0);
             sleep(250);
             clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
             sleep(250);

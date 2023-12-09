@@ -240,6 +240,7 @@ public class AutonBase extends LinearOpMode {
                 // Apply the turning correction to the current driving speed.
                 moveRobot(driveSpeed, turnSpeed);
             }
+            telemetry.addData("Arm ENcoder; ", armMotor.getArmEncodedPosition());
 
             // Stop all motion & Turn off RUN_TO_POSITION
             moveRobot(0, 0);

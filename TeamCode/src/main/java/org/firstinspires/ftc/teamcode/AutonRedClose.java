@@ -62,7 +62,7 @@ public class AutonRedClose extends AutonBase {
 
         //Left
         if(parkingPosition == 1){
-            imuDrive(.4, 29.5, 0);
+            imuDrive(.4, 28.5, 0);
             imuTurn(.3, -90);
             imuDrive(.25, 7, 0);
             imuDrive(.15, -3, 0);
@@ -77,8 +77,8 @@ public class AutonRedClose extends AutonBase {
 
             //drive towards pixel
             imuDrive(.2, -20, 0);
-            encoderStrafe(0.5,5.5,5);
-            imuDrive(.15, -14.5, 0);
+            encoderStrafe(0.5,7.5,5);
+            imuDrive(.15, -15.5, 0);
 
             //deposit back pixel
             armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
@@ -135,7 +135,7 @@ public class AutonRedClose extends AutonBase {
         //Right
         else if(parkingPosition == 3){
             imuDrive(.4, 5, 0);
-            encoderStrafe(0.25,12.5,5);
+            encoderStrafe(0.25,13.5,5);
             //imuTurn(0.4, 61);
             imuDrive(0.25, 25, 0);
             imuDrive(.25,-6,0);
@@ -150,7 +150,7 @@ public class AutonRedClose extends AutonBase {
 
             //drive to deliver pixel
             imuDrive(0.25, -4, 0);
-            encoderStrafe(0.5, 34, 5);
+            encoderStrafe(0.5, 31.5, 5);
             imuTurn(0.5, -90);
 
             //deliver pixel

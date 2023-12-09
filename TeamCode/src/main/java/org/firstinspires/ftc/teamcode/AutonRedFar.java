@@ -80,13 +80,13 @@ public class AutonRedFar extends AutonBase {
             encoderStrafe(0.5,28,5);
             imuDrive(.5,-85,0);
             sleep(250);
-            encoderStrafe(0.5, -17, 5);
+            encoderStrafe(0.5, -18.5, 5);
 
             armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
             sleep(500);
             flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
             sleep(300);
-            imuDrive(.15, -7, 0);
+            imuDrive(.15, -6, 0);
             sleep(250);
             clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
             sleep(250);
@@ -113,13 +113,13 @@ public class AutonRedFar extends AutonBase {
             imuDrive(.5,30,0);
             imuTurn(.75, -90);
             imuDrive(0.5, -94, 0);
-            encoderStrafe(0.25, -25, 5);
+            encoderStrafe(0.25, -27, 5);
 
             armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
             sleep(500);
             flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
             sleep(300);
-            imuDrive(.15, -5.5, 0);
+            imuDrive(.15, -6.5, 0);
             sleep(250);
             clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
             sleep(250);
@@ -142,10 +142,31 @@ public class AutonRedFar extends AutonBase {
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
             sleep(1000);
 
-            //drive to deliver pixel
+            //drive to pickup pixel
             imuDrive(0.25, -5.5, 0);
             imuTurn(0.5,180);
-            encoderStrafe(0.5, 29, 5);
+
+            //white pixel stuff
+            /*
+            encoderStrafe(0.25, -3, 5);
+            imuDrive(0.5, 16.5, 0);
+
+
+            armMotor.moveArmEncoded(ArmPositions.CLAW2_HOVER);
+            sleep(500);
+            imuDrive(0.15, 10, 0);
+            sleep(500);
+            armMotor.moveArmEncoded(ArmPositions.CLAW2_PICKUP);
+            sleep(500);
+            clawServo2.moveToPosition(GripperPositions.GRIPPER2_CLOSED);
+            sleep(500);
+            armMotor.moveArmEncoded(ArmPositions.CLAW2_HOVER);
+            sleep(500);
+
+            imuDrive(0.25, -20, 0);*/
+
+            //drive to deliver pixel
+            encoderStrafe(0.5, 29, 5); // distance is 32 when doing white pixel as well
             imuDrive(0.5, -85, 0);
             encoderStrafe(0.25, -39, 5);
 
