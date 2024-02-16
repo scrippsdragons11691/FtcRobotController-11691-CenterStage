@@ -76,7 +76,15 @@ public class AutonBlueFar extends AutonBase {
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
             sleep(1000);
 
+            //return to home
+            imuDrive(.4,-5,0);
+            imuTurn(.3,90);
+            imuDrive(.4,-29.5,0);
+            encoderStrafe(0.25, -3, 5);
+
+
             //drive to deliver pixel
+/*
             imuDrive(0.25, -5.5, 0);
             imuTurn(0.5,180);
             encoderStrafe(0.5, -29, 5);
@@ -93,12 +101,14 @@ public class AutonBlueFar extends AutonBase {
             sleep(250);
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
             sleep(1000);
+
+ */
         }
         //Middle
         else if(parkingPosition == 2){
             imuDrive(.3, 34, 0);
             sleep(750);
-            imuDrive(.15, -3, 0);
+            imuDrive(.15, -3.5, 0);
 
             //move arm down to deliver
             clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
@@ -106,7 +116,10 @@ public class AutonBlueFar extends AutonBase {
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
             sleep(1000);
 
+            imuDrive(.3,-29,0);
+
             //drive to deliver pixel
+            /*
             imuDrive(.25, -10, 0);
             encoderStrafe(.5,12,5);
             imuDrive(.5,30,0);
@@ -124,7 +137,7 @@ public class AutonBlueFar extends AutonBase {
             sleep(250);
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
             sleep(1000);
-
+*/
 
         }
         //Right
@@ -141,9 +154,12 @@ public class AutonBlueFar extends AutonBase {
             sleep(500);
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
             sleep(500);
+            imuDrive(.25, -4.75,0 );
+             imuTurn(.3, -90);
+             imuDrive(.5,-28, 0 );
 
             //drive towards back
-            imuDrive(.5, -3.5, 0);
+            /*imuDrive(.5, -3.5, 0);
             encoderStrafe(0.5,-28,5);
             imuDrive(.5,-84,0);
             sleep(250);
@@ -159,6 +175,7 @@ public class AutonBlueFar extends AutonBase {
             sleep(250);
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
             sleep(1000);
+            */
         }
         //Error unable to find target so slide to backdrop
         else{
