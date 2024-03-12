@@ -50,11 +50,6 @@ public class RobotHardwareMap {
     public DigitalChannel LED2Green;
     public DigitalChannel LED2Red;
 
-    public Servo servoClaw1;
-    public Servo servoClaw2;
-    public Servo servoLauncher;
-
-
     public IMU chImu;
 
     private final int baseResolution_x = 320;

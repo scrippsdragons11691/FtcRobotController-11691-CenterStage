@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
+import org.firstinspires.ftc.teamcode.hardware.PokerPositions;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperPotentiometer;
 import org.firstinspires.ftc.teamcode.hardware.FlipperPotentiometerPositions;
 import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.hardware.RobotControlGripperServos;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlLifter;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlLights;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlMechanum;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlPokerServo;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -50,11 +52,12 @@ public class TeleOpMain extends LinearOpMode {
         RobotControlLights lights = new RobotControlLights(theHardwareMap, this);
         RobotControlLifter liftMotor = new RobotControlLifter(theHardwareMap,this);
         RobotControlArm armMotor = new RobotControlArm(theHardwareMap,this);
-        RobotControlFlipperMotor flipperMotor = new RobotControlFlipperMotor(theHardwareMap, this);
-        RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
-        RobotControlGripperServos clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
+        //RobotControlFlipperMotor flipperMotor = new RobotControlFlipperMotor(theHardwareMap, this);
+        //RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
+        //RobotControlGripperServos clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
         RobotControlGripperServos servoLauncher = new RobotControlGripperServos(theHardwareMap,this,"ServoLauncher");
         RobotControlFlipperPotentiometer robotControlFlipperPotentiometer = new RobotControlFlipperPotentiometer(theHardwareMap, this, "potentiometer");
+        RobotControlPokerServo servoPoker = new RobotControlPokerServo(theHardwareMap, this, "ServoPoker");
         AutonBase autonBase = new AutonBase();
 
         DistanceSensor distanceSensor = theHardwareMap.baseHMap.get(DistanceSensor.class, "distance");
@@ -63,10 +66,10 @@ public class TeleOpMain extends LinearOpMode {
         //Set the initial value for the Drone Launcher servo
         servoLauncher.moveToPosition(GripperPositions.DRONE_READY);
 
-        lights.switchLight(Light.ALL, LightMode.GREEN);
+        //Pull the pixel poker all the way in
+        servoPoker.moveToPosition(PokerPositions.POKER_FULLIN);
 
-        /*FtcDashboard dashboard = FtcDashboard.getInstance();
-        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());*/
+        lights.switchLight(Light.ALL, LightMode.GREEN);
 
         telemetry.addData("Robot", "Initialized successfully");
         telemetry.update();
@@ -205,6 +208,33 @@ public class TeleOpMain extends LinearOpMode {
              * Gamepad 2
              */
 
+            //Pick-up 2 Pixels
+            if(currentGamepad2.y && servoPoker.getCurrentPosition() != PokerPositions.POKER_FULLOUT)
+            {
+                servoPoker.moveToPosition(PokerPositions.POKER_FULLOUT);
+            }
+            //If we just let go of the Y button, then retract to holding just two pixels
+            //Might want to add a check that the current position is POKER_FULLOUT
+            if(!currentGamepad2.y && previousGamepad2.y)
+            {
+                servoPoker.moveToPosition((PokerPositions.POKER_2PIX));
+                telemetry.addData("Poker Full Extend",servoPoker.getCurrentPosition());
+            }
+            //Release the Pixel(s)
+            if(currentGamepad2.b)
+            {
+                if(servoPoker.getCurrentPosition() == PokerPositions.POKER_2PIX)
+                {
+                    servoPoker.moveToPosition(PokerPositions.POKER_1PIX);
+                    telemetry.addData("Poker Release 2nd Pixel",servoPoker.getCurrentPosition());
+                }
+                else
+                {
+                    servoPoker.moveToPosition(PokerPositions.POKER_FULLIN);
+                    telemetry.addData("Poker Release 1st Pixel",servoPoker.getCurrentPosition());
+                }
+            }
+/* *****************************************
             //Open/close claw1
             if (currentGamepad2.left_bumper)
             {
@@ -229,14 +259,8 @@ public class TeleOpMain extends LinearOpMode {
                 telemetry.addData("Claw2 Close",clawServo2.getCurrentPosition());
             }
 
-            /*if (currentGamepad2.y && previousGamepad2.y){
-                currentClaw += 0.05;
-                theHardwareMap.servoClaw2.setPosition(currentClaw);
-            } else if (currentGamepad2.x && previousGamepad2.x){
-                currentClaw -= 0.05;
-                theHardwareMap.servoClaw2.setPosition(currentClaw);
-            }*/
 
+********************************************** */
             //Arm Up/Down
             if (currentGamepad2.left_stick_y != 0)
             {
@@ -253,7 +277,7 @@ public class TeleOpMain extends LinearOpMode {
                 armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
 
             }
-
+/* ***********************************************************
             //Flipper
             if (currentGamepad2.right_stick_y !=0)
             {
@@ -279,9 +303,9 @@ public class TeleOpMain extends LinearOpMode {
 //                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_UP);
                 robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_PLACE, flipperMotor, 0.5);
             }
-
+****************************** */
             double currentArmPosition = armMotor.getArmEncodedPosition();
-
+/* ************************************************
             if (currentArmPosition <= ArmPositions.FRONT_ARC_TOP.getEncodedPos()){
 
                 if (currentGamepad2.b){
@@ -304,7 +328,7 @@ public class TeleOpMain extends LinearOpMode {
                 }
 
             }
-
+************************* */
 
             //Check for detections
             lights.switchLight(Light.LED1, LightMode.OFF);
@@ -346,11 +370,11 @@ public class TeleOpMain extends LinearOpMode {
 
 
             armMotor.addArmTelemetry();
-            flipperMotor.addFlipperTelemetry();
+            //flipperMotor.addFlipperTelemetry();
             telemetry.addData("Pot Position", robotControlFlipperPotentiometer.getCurrentPotPosition());
             telemetry.addData("looptime", System.currentTimeMillis() - loopTimeStart);
-            telemetry.addData("Servo 1: ", clawServo1.getCurrentPosition().getServoPos());
-            telemetry.addData("Servo 2: ", clawServo2.getCurrentPosition().getServoPos());
+            //telemetry.addData("Servo 1: ", clawServo1.getCurrentPosition().getServoPos());
+            //telemetry.addData("Servo 2: ", clawServo2.getCurrentPosition().getServoPos());
             telemetry.addData("Drone Launcher: ", servoLauncher.getCurrentPosition().getServoPos());
             telemetry.update();
         }
