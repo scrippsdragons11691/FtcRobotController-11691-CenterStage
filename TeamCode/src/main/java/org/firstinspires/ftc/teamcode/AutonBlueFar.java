@@ -14,7 +14,7 @@ public class AutonBlueFar extends AutonBase {
     private int     parkingPosition= -1;
     private int     lastParkingPosition = -1;
 
-    private double autonFast = 0.8;
+    private double autonFast = 0.7;
     private double autonSlow = 0.25;
 
     @Override
@@ -169,7 +169,7 @@ public class AutonBlueFar extends AutonBase {
             encoderStrafe(0.5, 20, 5);
 
             armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
-            sleep(500);
+            sleep(500);re
             flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
             sleep(300);
             imuDrive(.15, -3.5, 0);
@@ -179,6 +179,9 @@ public class AutonBlueFar extends AutonBase {
             armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
             sleep(1000);
             */
+
+
+
         }
         //Error unable to find target so slide to backdrop
         else{
@@ -188,6 +191,15 @@ public class AutonBlueFar extends AutonBase {
 
             telemetry.addData("Park Position Unknown",parkingPosition);
         }
+
+        //Drive to backdrop
+        imuDrive(autonFast,12,0);
+        encoderStrafe(autonFast, 28, 5);
+        imuDrive(autonFast, 36, 0);
+        imuTurn(autonFast,90);
+        imuDrive(autonFast,-96,0);
+
+        //Deliver pixel based on parkingposition
 
         //set arm down in the end
         armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
