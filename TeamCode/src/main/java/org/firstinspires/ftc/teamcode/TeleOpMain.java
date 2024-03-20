@@ -262,7 +262,9 @@ public class TeleOpMain extends LinearOpMode {
                 flipperMotor.stopFlipper();
             }
 
-            if (currentGamepad2.a && !previousGamepad2.a){
+            //Move the flipper down to pick up 2
+            if (currentGamepad2.b && !previousGamepad2.b && (Math.abs((robotControlFlipperPotentiometer.getCurrentPotPosition() - FlipperPotentiometerPositions.CLAW2_DOWN.getVoltagePos())) > 0.1))
+            {
 //                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_DOWN);
                 robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_DOWN, flipperMotor, 0.5);
             }
@@ -270,8 +272,9 @@ public class TeleOpMain extends LinearOpMode {
 //                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_UP);
                 robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_PLACE, flipperMotor, 0.5);
             }
-
-            if (currentGamepad2.b && !previousGamepad2.b){
+            //Move the flipper down to pick up 1
+            if (currentGamepad2.a && !previousGamepad2.a  && (Math.abs((robotControlFlipperPotentiometer.getCurrentPotPosition() - FlipperPotentiometerPositions.CLAW1_DOWN.getVoltagePos())) > 0.1))
+            {
 //                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_DOWN);
                 robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_DOWN, flipperMotor, 0.5);
             }

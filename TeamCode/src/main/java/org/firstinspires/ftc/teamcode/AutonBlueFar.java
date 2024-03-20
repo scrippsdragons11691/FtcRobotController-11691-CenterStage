@@ -14,6 +14,9 @@ public class AutonBlueFar extends AutonBase {
     private int     parkingPosition= -1;
     private int     lastParkingPosition = -1;
 
+    private double autonFast = 0.8;
+    private double autonSlow = 0.25;
+
     @Override
     public void runOpMode(){
         boolean left = false;
