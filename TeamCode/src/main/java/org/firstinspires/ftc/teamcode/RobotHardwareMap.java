@@ -80,7 +80,7 @@ public class RobotHardwareMap {
         backRightMotor = baseHMap.get(DcMotorEx.class, "RR");
         frontLeftMotor = baseHMap.get(DcMotorEx.class, "FL");
         frontRightMotor = baseHMap.get(DcMotorEx.class, "FR");
-        lifterMotor = baseHMap.get(DcMotorEx.class, "Lifter");
+        //lifterMotor = baseHMap.get(DcMotorEx.class, "Lifter");
 
         //Camera
         try {

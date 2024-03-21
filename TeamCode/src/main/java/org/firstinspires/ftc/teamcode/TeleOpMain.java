@@ -50,9 +50,9 @@ public class TeleOpMain extends LinearOpMode {
         robotDrive.initialize();
 
         RobotControlLights lights = new RobotControlLights(theHardwareMap, this);
-        RobotControlLifter liftMotor = new RobotControlLifter(theHardwareMap,this);
+        //RobotControlLifter liftMotor = new RobotControlLifter(theHardwareMap,this);
         RobotControlArm armMotor = new RobotControlArm(theHardwareMap,this);
-        //RobotControlFlipperMotor flipperMotor = new RobotControlFlipperMotor(theHardwareMap, this);
+        RobotControlFlipperMotor flipperMotor = new RobotControlFlipperMotor(theHardwareMap, this);
         //RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
         //RobotControlGripperServos clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
         RobotControlGripperServos servoLauncher = new RobotControlGripperServos(theHardwareMap,this,"ServoLauncher");
@@ -60,8 +60,8 @@ public class TeleOpMain extends LinearOpMode {
         RobotControlPokerServo servoPoker = new RobotControlPokerServo(theHardwareMap, this, "ServoPoker");
         AutonBase autonBase = new AutonBase();
 
-        DistanceSensor distanceSensor = theHardwareMap.baseHMap.get(DistanceSensor.class, "distance");
-        final int DISTANCE_FROM_BACKBOARD = 7;
+        //DistanceSensor distanceSensor = theHardwareMap.baseHMap.get(DistanceSensor.class, "distance");
+        //final int DISTANCE_FROM_BACKBOARD = 7;
 
         //Set the initial value for the Drone Launcher servo
         servoLauncher.moveToPosition(GripperPositions.DRONE_READY);
@@ -75,6 +75,7 @@ public class TeleOpMain extends LinearOpMode {
         telemetry.update();
 
         // waitForStart();
+        /*
         AprilTagProcessor aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawTagID(true)
@@ -89,7 +90,7 @@ public class TeleOpMain extends LinearOpMode {
                 .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .build();
-
+        */
 
         // do something in init mode?
         while (opModeInInit()) {
@@ -104,6 +105,7 @@ public class TeleOpMain extends LinearOpMode {
 
         //Initialize remaining variables
         double loopTimeStart = 0;
+        double currentPoker = 0;
         boolean slowMode = true;
         lights.switchLight(Light.LED1, LightMode.OFF);
 		lights.switchLight(Light.LED2, LightMode.GREEN);
@@ -170,6 +172,7 @@ public class TeleOpMain extends LinearOpMode {
             //Distance Sensor Alignment
             //TODO: Add functionality with April Tags
             //TODO: Make sure you can run auton functionality in TeleOp
+            /*
             if (currentGamepad1.a){
                 double currentDistance = distanceSensor.getDistance(DistanceUnit.INCH);
                 if (currentDistance > DISTANCE_FROM_BACKBOARD){
@@ -182,8 +185,10 @@ public class TeleOpMain extends LinearOpMode {
                     autonBase.imuDrive(0, 0, 0);
                 }
             }
+            */
 
             //Lifter motor
+            /*
             if (currentGamepad1.y)
             {
                 liftMotor.moveLifterPower(1.0);
@@ -203,12 +208,16 @@ public class TeleOpMain extends LinearOpMode {
             {
                 liftMotor.moveLifterPower(-0.4);
             }
+            */
+
 
             /***************
              * Gamepad 2
              */
 
             //Pick-up 2 Pixels
+            currentPoker = servoPoker.getCurrentPosition().getServoPos();
+
             if(currentGamepad2.y && servoPoker.getCurrentPosition() != PokerPositions.POKER_FULLOUT)
             {
                 servoPoker.moveToPosition(PokerPositions.POKER_FULLOUT);
@@ -221,9 +230,9 @@ public class TeleOpMain extends LinearOpMode {
                 telemetry.addData("Poker Full Extend",servoPoker.getCurrentPosition());
             }
             //Release the Pixel(s)
-            if(currentGamepad2.b)
+            if(currentGamepad2.b && !previousGamepad2.b)
             {
-                if(servoPoker.getCurrentPosition() == PokerPositions.POKER_2PIX)
+                if(currentPoker >= 0.5)
                 {
                     servoPoker.moveToPosition(PokerPositions.POKER_1PIX);
                     telemetry.addData("Poker Release 2nd Pixel",servoPoker.getCurrentPosition());
@@ -277,7 +286,7 @@ public class TeleOpMain extends LinearOpMode {
                 armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
 
             }
-/* ***********************************************************
+
             //Flipper
             if (currentGamepad2.right_stick_y !=0)
             {
@@ -285,7 +294,7 @@ public class TeleOpMain extends LinearOpMode {
             } else {
                 flipperMotor.stopFlipper();
             }
-
+/* ******************************
             if (currentGamepad2.a && !previousGamepad2.a){
 //                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_DOWN);
                 robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_DOWN, flipperMotor, 0.5);
@@ -303,7 +312,7 @@ public class TeleOpMain extends LinearOpMode {
 //                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_UP);
                 robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_PLACE, flipperMotor, 0.5);
             }
-****************************** */
+****************************************** */
             double currentArmPosition = armMotor.getArmEncodedPosition();
 /* ************************************************
             if (currentArmPosition <= ArmPositions.FRONT_ARC_TOP.getEncodedPos()){
@@ -333,7 +342,7 @@ public class TeleOpMain extends LinearOpMode {
             //Check for detections
             lights.switchLight(Light.LED1, LightMode.OFF);
             //telemetry.clear();
-
+            /*
             if (1 == 0) {
 
                 List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
@@ -367,12 +376,15 @@ public class TeleOpMain extends LinearOpMode {
                     }
                 }
             }
+            */
 
-
+            telemetry.addData("looptime:", System.currentTimeMillis() - loopTimeStart);
             armMotor.addArmTelemetry();
-            //flipperMotor.addFlipperTelemetry();
-            telemetry.addData("Pot Position", robotControlFlipperPotentiometer.getCurrentPotPosition());
-            telemetry.addData("looptime", System.currentTimeMillis() - loopTimeStart);
+            flipperMotor.addFlipperTelemetry();
+            telemetry.addData("Flipper Position:",flipperMotor.getCurrentPosition());
+            telemetry.addData("Pot Position:", robotControlFlipperPotentiometer.getCurrentPotPosition());
+            telemetry.addData("Pixel Servo:", servoPoker.getCurrentPosition().getServoPos());
+            telemetry.addData("Pixel variable:", currentPoker);
             //telemetry.addData("Servo 1: ", clawServo1.getCurrentPosition().getServoPos());
             //telemetry.addData("Servo 2: ", clawServo2.getCurrentPosition().getServoPos());
             telemetry.addData("Drone Launcher: ", servoLauncher.getCurrentPosition().getServoPos());
