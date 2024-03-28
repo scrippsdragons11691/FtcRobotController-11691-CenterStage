@@ -35,7 +35,7 @@ public class RobotControlFlipperPotentiometer {
             flipperMotor.moveFlipperPowerPot(power);
         }
         else{
-            flipperMotor.moveFlipperPower(0);
+            flipperMotor.moveFlipperPowerPot(0);
         }
     }
 

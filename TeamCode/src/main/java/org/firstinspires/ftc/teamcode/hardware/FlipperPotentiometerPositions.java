@@ -7,6 +7,7 @@ public enum FlipperPotentiometerPositions {
     CLAW2_DOWN("CLAW2_DOWN", 0.455),
     CLAW1_PLACE("CLAW1_PLACE", 0),
     CLAW2_PLACE("CLAW2_PLACE", 1.858),
+    DELIVER_PIXEL("DELIVER_PIXEL",1.74),
     MAX_VOLTAGE("MAX_VOLTAGE", 4);
 
     private final String position;

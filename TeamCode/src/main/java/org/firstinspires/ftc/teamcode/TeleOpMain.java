@@ -138,9 +138,9 @@ public class TeleOpMain extends LinearOpMode {
 
             //Speed values for slow mode
             if (slowMode) {
-                drive *= 0.6;
-                strafe *= 0.6;
-                twist *= 0.6;
+                drive *= 0.4;
+                strafe *= 0.4;
+                twist *= 0.4;
 
             } else { // non slow mode is only 75% power
                 drive *= 1;
@@ -160,13 +160,12 @@ public class TeleOpMain extends LinearOpMode {
             }
 
             //Drone launch
-            if (currentGamepad1.x && !previousGamepad1.x)
-            {
+            if (currentGamepad1.x && !previousGamepad1.x) {
                 servoLauncher.moveToPosition(GripperPositions.DRONE_LAUNCH);
-                telemetry.addData ("Drone Launch",servoLauncher.getCurrentPosition());
+                telemetry.addData("Drone Launch", servoLauncher.getCurrentPosition());
             } else if (!currentGamepad1.x && previousGamepad1.x) {
                 servoLauncher.moveToPosition(GripperPositions.DRONE_READY);
-                telemetry.addData("Drone Reset",servoLauncher.getCurrentPosition());
+                telemetry.addData("Drone Reset", servoLauncher.getCurrentPosition());
             }
 
             //Distance Sensor Alignment
@@ -218,30 +217,43 @@ public class TeleOpMain extends LinearOpMode {
             //Pick-up 2 Pixels
             currentPoker = servoPoker.getCurrentPosition().getServoPos();
 
-            if(currentGamepad2.y && servoPoker.getCurrentPosition() != PokerPositions.POKER_FULLOUT)
-            {
+            if (currentGamepad2.y && servoPoker.getCurrentPosition() != PokerPositions.POKER_FULLOUT) {
+                //armMotor.stopArmWithHold();
+                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
                 servoPoker.moveToPosition(PokerPositions.POKER_FULLOUT);
+
             }
             //If we just let go of the Y button, then retract to holding just two pixels
             //Might want to add a check that the current position is POKER_FULLOUT
-            if(!currentGamepad2.y && previousGamepad2.y)
-            {
+            if (!currentGamepad2.y && previousGamepad2.y) {
+                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
+                //armMotor.stopArmWithHold();
                 servoPoker.moveToPosition((PokerPositions.POKER_2PIX));
-                telemetry.addData("Poker Full Extend",servoPoker.getCurrentPosition());
+                telemetry.addData("Poker Full Extend", servoPoker.getCurrentPosition());
             }
             //Release the Pixel(s)
-            if(currentGamepad2.b && !previousGamepad2.b)
-            {
-                if(currentPoker >= 0.5)
-                {
+            if (currentGamepad2.b && !previousGamepad2.b) {
+                if (currentPoker >= 0.5) {
                     servoPoker.moveToPosition(PokerPositions.POKER_1PIX);
-                    telemetry.addData("Poker Release 2nd Pixel",servoPoker.getCurrentPosition());
-                }
-                else
-                {
+                    telemetry.addData("Poker Release 2nd Pixel", servoPoker.getCurrentPosition());
+                } else {
                     servoPoker.moveToPosition(PokerPositions.POKER_FULLIN);
-                    telemetry.addData("Poker Release 1st Pixel",servoPoker.getCurrentPosition());
+                    telemetry.addData("Poker Release 1st Pixel", servoPoker.getCurrentPosition());
                 }
+            }
+            // pre set postistions for arm
+            if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down)
+            {
+               armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+               sleep(500);
+            }
+            // pre set arm and flipper to deliver
+            if (currentGamepad2.a && !previousGamepad2.a)
+            {
+                armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+                sleep(1000);
+                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.DELIVER_PIXEL,flipperMotor,0.8);
+                sleep(500);
             }
 /* *****************************************
             //Open/close claw1

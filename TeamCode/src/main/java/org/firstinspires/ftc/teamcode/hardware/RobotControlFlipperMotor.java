@@ -76,7 +76,8 @@ public class RobotControlFlipperMotor {
                 flipperMotor.setPower(power * clawPowerReducer);
             } else {
                 //telemetry.addData("flipperPowerStop:", power  + " pos " + flipperPosition);
-                stopFlipper();
+                //stopFlipper();
+                flipperMotor.setPower(power * clawPowerReducer);
             }
         }
     }
