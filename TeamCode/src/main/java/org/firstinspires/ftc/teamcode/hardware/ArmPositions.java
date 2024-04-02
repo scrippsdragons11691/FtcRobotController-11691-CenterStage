@@ -15,7 +15,7 @@ public enum ArmPositions {
     BACK_ARC_TOP("BACK_ARC_TOP", 1270, 0, 0),
     CLAW2_HOVER("CLAW2_HOVER", 250, 0, 0),
     CLAW2_PICKUP("CLAW2_PICKUP", 240, 0, 0),
-    BACK_ARC_MAX("BACK_ARC_MAX", 2100, 0, 0);
+    BACK_ARC_MAX("BACK_ARC_MAX", 1800, 0, 0);
 
     private final String position;
     private final int encodedPos;

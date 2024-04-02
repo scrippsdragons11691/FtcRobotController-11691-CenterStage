@@ -12,17 +12,22 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
 import org.firstinspires.ftc.teamcode.hardware.Light;
 import org.firstinspires.ftc.teamcode.hardware.LightMode;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlArm;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperMotor;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlGripperServos;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlLights;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlPokerServo;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.teamcode.hardware.PokerPositions;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperPotentiometer;
 
 import java.util.List;
+import org.firstinspires.ftc.teamcode.hardware.FlipperPotentiometerPositions;
 
 public class AutonBase extends LinearOpMode {
 
@@ -31,7 +36,10 @@ public class AutonBase extends LinearOpMode {
     AprilTagProcessor aprilTagProcessor;
     VisionPortal visionPortal;
 
-    private IMU imu         = null;
+    private IMU imu = null;
+
+    public double autonFast = 0.6;
+    public double autonSlow = 0.3;
 
     private double targetHeading = 0;
     private double headingOffset = 0;
@@ -65,8 +73,11 @@ public class AutonBase extends LinearOpMode {
     RobotControlLights lights;
     RobotControlGripperServos clawServo1;
     RobotControlGripperServos clawServo2;
+    RobotControlPokerServo servoPoker;
     RobotControlArm armMotor;
     RobotControlFlipperMotor flipper;
+
+    RobotControlFlipperPotentiometer robotControlFlipperPotentiometer;
 
     public void initialize() {
         theHardwareMap  = new RobotHardwareMap(hardwareMap, this);
@@ -77,9 +88,10 @@ public class AutonBase extends LinearOpMode {
         robotCameraHandler.initialize();
         clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
         clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
+        servoPoker = new RobotControlPokerServo(theHardwareMap,this,"ServoPoker");
         armMotor = new RobotControlArm(theHardwareMap,this);
         flipper = new RobotControlFlipperMotor(theHardwareMap, this);
-
+        robotControlFlipperPotentiometer = new RobotControlFlipperPotentiometer(theHardwareMap, this, "potentiometer");
 
         imu = theHardwareMap.chImu;
 
@@ -102,6 +114,9 @@ public class AutonBase extends LinearOpMode {
         theHardwareMap.frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         theHardwareMap.backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         theHardwareMap.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //Extend the poker to full out
+        servoPoker.moveToPosition((PokerPositions.POKER_2PIX));
 
         /*aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
@@ -424,6 +439,33 @@ public class AutonBase extends LinearOpMode {
         headingOffset = getRawHeading();
         Log.println(Log.INFO, "Heading Offset", String.valueOf(headingOffset));
         robotHeading = 0;
+    }
+
+    public void deliverSpikePixel()
+    {
+        //move arm down to deliver
+        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
+        sleep(500);
+        servoPoker.moveToPosition((PokerPositions.POKER_1PIX));
+        sleep(1000);
+        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+        sleep(1000);
+    }
+
+    public void deliverBackdropPixel()
+    {
+        armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+        sleep(1000);
+        robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.DELIVER_PIXEL,flipper,0.2);
+        sleep(2000);
+        imuDrive(autonSlow, -6.5, 0);
+        sleep(500);
+        servoPoker.moveToPosition((PokerPositions.POKER_FULLIN));
+        sleep(1000);
+        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+        sleep(1000);
+        robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.MIN_VOLTAGE,flipper,0.5);
+        sleep(1000);
     }
 
     @Override
