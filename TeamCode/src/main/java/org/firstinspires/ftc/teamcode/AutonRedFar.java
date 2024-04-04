@@ -62,134 +62,66 @@ public class AutonRedFar extends AutonBase {
 
         //Left
         if(parkingPosition == 1){
-            imuDrive(.4, 29.5, 0);
-            imuTurn(.3, -90);
-            imuDrive(.25, 7, 0);
-            imuDrive(.15, -3, 0);
+            imuDrive(autonMedium, 21, 0);
+            encoderStrafe(autonSlow,-13,5);
+
+           // imuDrive(autonSlow, 7, 0);
+            //imuDrive(autonSlow, -3, 0);
 
             //move arm down to deliver
-            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
-            sleep(500);
-            clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
-            sleep(500);
-            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-            sleep(500);
+            deliverSpikePixel();
 
-            //drive towards back
-            imuDrive(.5, -5, 0);
-            encoderStrafe(0.5,28,5);
-            imuDrive(.5,-85,0);
-            sleep(250);
-            encoderStrafe(0.5, -18.5, 5);
+            //return to home
+            imuDrive(autonFast,-21,0);
+            encoderStrafe(autonSlow,13,5);
 
-            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
-            sleep(500);
-            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
-            sleep(300);
-            imuDrive(.15, -6, 0);
-            sleep(250);
-            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
-            sleep(250);
-            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-            sleep(1000);
         }
         //Middle
         else if(parkingPosition == 2){
-            imuDrive(.3, 34, 0);
+            imuDrive(autonMedium, 34, 0);
             sleep(750);
-            imuDrive(.15, -3, 0);
+            imuDrive(autonSlow, -3, 0);
 
             //move arm down to deliver
-            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
-            sleep(500);
-            clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
-            sleep(1000);
-            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-            sleep(1000);
+            deliverSpikePixel();
 
-            //drive to deliver pixel
-            imuDrive(.25, -10, 0);
-            encoderStrafe(.5,-12,5);
-            imuDrive(.5,30,0);
-            imuTurn(.75, -90);
-            imuDrive(0.5, -94, 0);
-            encoderStrafe(0.25, -27, 5);
-
-            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
-            sleep(500);
-            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
-            sleep(300);
-            imuDrive(.15, -6.5, 0);
-            sleep(250);
-            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
-            sleep(250);
-            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-            sleep(1000);
-
+            //drive to return home
+            imuDrive(autonFast,-30,0);
         }
         //Right
-        else if(parkingPosition == 3){
-            imuDrive(.4, 29.5, 0);
-            imuTurn(.3, 90);
-            imuDrive(.25, 7, 0);
-            imuDrive(.15, -3, 0);
+        else if(parkingPosition == 3) {
+            imuDrive(autonMedium, 29.5, 0);
+            imuTurn(autonSlow, 90);
+            imuDrive(autonSlow, 7, 0);
+            imuDrive(autonSlow, -3, 0);
 
             //move arm down to deliver
-            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
-            sleep(500);
-            clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
-            sleep(1000);
-            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-            sleep(1000);
-
-            //drive to pickup pixel
-            imuDrive(0.25, -5.5, 0);
-            imuTurn(0.5,180);
-
-            //white pixel stuff
-            /*
-            encoderStrafe(0.25, -3, 5);
-            imuDrive(0.5, 16.5, 0);
-
-
-            armMotor.moveArmEncoded(ArmPositions.CLAW2_HOVER);
-            sleep(500);
-            imuDrive(0.15, 10, 0);
-            sleep(500);
-            armMotor.moveArmEncoded(ArmPositions.CLAW2_PICKUP);
-            sleep(500);
-            clawServo2.moveToPosition(GripperPositions.GRIPPER2_CLOSED);
-            sleep(500);
-            armMotor.moveArmEncoded(ArmPositions.CLAW2_HOVER);
-            sleep(500);
-
-            imuDrive(0.25, -20, 0);*/
-
-            //drive to deliver pixel
-            encoderStrafe(0.5, 29, 5); // distance is 32 when doing white pixel as well
-            imuDrive(0.5, -85, 0);
-            encoderStrafe(0.25, -39, 5);
-
-            armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
-            sleep(500);
-            flipper.moveFlipperEncoded(FlipperMotorPositions.CLAW2_PLACE);
-            sleep(250);
-            imuDrive(.15, -7, 0);
-            sleep(250);
-            clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
-            sleep(250);
-            armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-            sleep(1000);
+           deliverSpikePixel();
+            //Move back home
+            imuDrive(autonMedium,-4,0);
+            imuTurn(autonMedium,-90);
+            imuDrive(autonFast,-28.5,0);
         }
-        //Error unable to find target so slide to backdrop
-        else{
-            imuDrive(.5, 50, 0);
-            imuTurn(0.5,-90);
-            imuDrive(0.5,-93,0);
+        //drive to backboard
+        imuDrive(autonFast,12,0);
+        encoderStrafe(autonSlow, -25, 5);
+        imuDrive(autonFast, 38, 0);
+        imuTurn(autonFast,-90);
+        imuDrive(autonFast,-98,0);
 
-            telemetry.addData("Park Position Unknown",parkingPosition);
+        //Deliver pixel based on parkingposition
+        if(parkingPosition == 1) {
+            encoderStrafe(autonSlow, -19, 5);
         }
-
+        else if (parkingPosition == 2)
+        {
+            encoderStrafe(autonSlow, -24.5, 5);
+        }
+        else if (parkingPosition == 3)
+        {
+            encoderStrafe(autonSlow, -36,5);
+        }
+        deliverBackdropPixel();
         //set arm down in the end
         armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
     }

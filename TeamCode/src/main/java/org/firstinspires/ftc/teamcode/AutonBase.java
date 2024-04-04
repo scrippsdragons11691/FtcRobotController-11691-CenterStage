@@ -38,7 +38,8 @@ public class AutonBase extends LinearOpMode {
 
     private IMU imu = null;
 
-    public double autonFast = 0.6;
+    public double autonFast = 0.7;
+    public double autonMedium = 0.5;
     public double autonSlow = 0.3;
 
     private double targetHeading = 0;
@@ -447,24 +448,24 @@ public class AutonBase extends LinearOpMode {
         armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
         sleep(500);
         servoPoker.moveToPosition((PokerPositions.POKER_1PIX));
-        sleep(1000);
+        sleep(750);
         armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-        sleep(1000);
+        sleep(500);
     }
 
     public void deliverBackdropPixel()
     {
-        armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+        robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.DELIVER_PIXEL,flipper,0.3);
         sleep(1000);
-        robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.DELIVER_PIXEL,flipper,0.2);
-        sleep(2000);
+        //armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+        //sleep(1000);
         imuDrive(autonSlow, -6.5, 0);
         sleep(500);
         servoPoker.moveToPosition((PokerPositions.POKER_FULLIN));
         sleep(1000);
         armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
         sleep(1000);
-        robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.MIN_VOLTAGE,flipper,0.5);
+        robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.MIN_VOLTAGE,flipper,0.7);
         sleep(1000);
     }
 

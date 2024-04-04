@@ -50,7 +50,7 @@ public class TeleOpMain extends LinearOpMode {
         robotDrive.initialize();
 
         RobotControlLights lights = new RobotControlLights(theHardwareMap, this);
-        //RobotControlLifter liftMotor = new RobotControlLifter(theHardwareMap,this);
+        RobotControlLifter liftMotor = new RobotControlLifter(theHardwareMap,this);
         RobotControlArm armMotor = new RobotControlArm(theHardwareMap,this);
         RobotControlFlipperMotor flipperMotor = new RobotControlFlipperMotor(theHardwareMap, this);
         //RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
@@ -187,7 +187,6 @@ public class TeleOpMain extends LinearOpMode {
             */
 
             //Lifter motor
-            /*
             if (currentGamepad1.y)
             {
                 liftMotor.moveLifterPower(1.0);
@@ -207,7 +206,6 @@ public class TeleOpMain extends LinearOpMode {
             {
                 liftMotor.moveLifterPower(-0.4);
             }
-            */
 
 
             /***************
@@ -217,8 +215,17 @@ public class TeleOpMain extends LinearOpMode {
             //Pick-up 2 Pixels
             currentPoker = servoPoker.getCurrentPosition().getServoPos();
 
+            if ((servoPoker.getCurrentPosition() == PokerPositions.POKER_FULLOUT) || (servoPoker.getCurrentPosition() == PokerPositions.POKER_2PIX))
+            {
+                lights.switchLight(Light.LED1, LightMode.RED);
+            }
+            else if(servoPoker.getCurrentPosition() == PokerPositions.POKER_1PIX)
+            {
+                lights.switchLight(Light.LED1, LightMode.GREEN);
+            }
+
             if (currentGamepad2.y && servoPoker.getCurrentPosition() != PokerPositions.POKER_FULLOUT) {
-                //armMotor.stopArmWithHold();
+                //armMotor.stopArmWithHold();r
                 armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
                 servoPoker.moveToPosition(PokerPositions.POKER_FULLOUT);
 
@@ -241,7 +248,7 @@ public class TeleOpMain extends LinearOpMode {
                     telemetry.addData("Poker Release 1st Pixel", servoPoker.getCurrentPosition());
                 }
             }
-            // pre set postistions for arm
+            // pre set posistions for arm
             if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down)
             {
                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
@@ -306,50 +313,7 @@ public class TeleOpMain extends LinearOpMode {
             } else {
                 flipperMotor.stopFlipper();
             }
-/* ******************************
-            if (currentGamepad2.a && !previousGamepad2.a){
-//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_DOWN);
-                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_DOWN, flipperMotor, 0.5);
-            }
-            if (currentGamepad2.x && !previousGamepad2.x){
-//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_UP);
-                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_PLACE, flipperMotor, 0.5);
-            }
-
-            if (currentGamepad2.b && !previousGamepad2.b){
-//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_DOWN);
-                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_DOWN, flipperMotor, 0.5);
-            }
-            if (currentGamepad2.y && !previousGamepad2.y){
-//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_UP);
-                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_PLACE, flipperMotor, 0.5);
-            }
-****************************************** */
             double currentArmPosition = armMotor.getArmEncodedPosition();
-/* ************************************************
-            if (currentArmPosition <= ArmPositions.FRONT_ARC_TOP.getEncodedPos()){
-
-                if (currentGamepad2.b){
-//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_DOWN);
-                    robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_DOWN, flipperMotor, 1);
-                }
-                else if (currentGamepad2.a){
-//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_DOWN);
-                    robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_DOWN, flipperMotor, 1);
-                }
-            }
-            else {
-                if (currentGamepad2.b){
-//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW2_UP);
-                    robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW2_PLACE, flipperMotor, 1);
-                }
-                else if (currentGamepad2.a){
-//                flipperMotor.moveFlipperEncoded(FlipperMotorPositions.CLAW1_UP);
-                    robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.CLAW1_PLACE, flipperMotor, 1);
-                }
-
-            }
-************************* */
 
             //Check for detections
             lights.switchLight(Light.LED1, LightMode.OFF);
