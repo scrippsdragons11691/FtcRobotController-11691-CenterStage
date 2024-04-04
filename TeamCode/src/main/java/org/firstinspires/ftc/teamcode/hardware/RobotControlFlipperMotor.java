@@ -87,24 +87,26 @@ public class RobotControlFlipperMotor {
 
         flipperCurrentPosition = FlipperMotorPositions.UNKNOWN;
 
-        //only try moving the arm if initialized
+        //only try moving the flipper if initialized
         if (flipperInitialized) {
             double flipperPosition = robotControlFlipperPotentiometer.getCurrentPotPosition();
             double clawPowerReducer = 0.5;
 
             //since we're in manual mode, run without encoder
-            telemetry.addData("Potentiometer Position: ", robotControlFlipperPotentiometer.getCurrentPotPosition());
-
             flipperMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            flipperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             if (power > 0
-                    && flipperPosition < FlipperPotentiometerPositions.MAX_VOLTAGE.getVoltagePos()) {
+                    && flipperPosition < FlipperPotentiometerPositions.MAX_VOLTAGE.getVoltagePos())
+            {
                 flipperMotor.setPower(power * clawPowerReducer);
-            } else if (power < 0
-                    && flipperPosition > FlipperPotentiometerPositions.MIN_VOLTAGE.getVoltagePos()){
+            }
+            else if (power < 0
+                    && flipperPosition > FlipperPotentiometerPositions.MIN_VOLTAGE.getVoltagePos())
+            {
                 flipperMotor.setPower(power * clawPowerReducer);
-            } else {
+            }
+            else
+            {
                 stopFlipper();
             }
         }
@@ -141,6 +143,7 @@ public class RobotControlFlipperMotor {
     public void addFlipperTelemetry(){
         if (flipperInitialized){
             telemetry.addData("flipperEncoder:", flipperMotor.getCurrentPosition());
+            telemetry.addData("flipperPOT:", robotControlFlipperPotentiometer.getCurrentPotPosition());
         } else {
             telemetry.addData("flipperEncoder:", "Uninitialized!");
         }

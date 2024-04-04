@@ -107,6 +107,7 @@ public class RobotControlArm {
             armMotor.setTargetPosition(armTargetPosition.getEncodedPos());
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             armMotor.setPower(ArmMovePowerCalculator.calculatePowerForMove(currentPosition, armTargetPosition.getEncodedPos()));
+
         }
     }
 

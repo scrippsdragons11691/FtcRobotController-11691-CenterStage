@@ -7,6 +7,7 @@ public enum FlipperMotorPositions {
     CLAW2_DOWN("CLAW2_DOWN", 0, -0.75, 400),
     CLAW1_UP("CLAW1_UP", 80, -0.75, 400),
     CLAW2_PLACE("CLAW2_PLACE", -49, -0.75, 400),
+    DELIVER_PIXEL("DELIVER_PIXEL",10,-.075,400),
     MAX_REVERSE("MAX_FORWARD", 200, -0.75, 400),
     MAX_FORWARD("MAX_REVERSE", -50, 0.75, 400);
 

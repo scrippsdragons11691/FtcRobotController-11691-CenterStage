@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
+import org.firstinspires.ftc.teamcode.hardware.FlipperMotorPositions;
 import org.firstinspires.ftc.teamcode.hardware.Light;
 import org.firstinspires.ftc.teamcode.hardware.LightMode;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlArm;
@@ -455,18 +456,21 @@ public class AutonBase extends LinearOpMode {
 
     public void deliverBackdropPixel()
     {
-        robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.DELIVER_PIXEL,flipper,0.3);
-        sleep(1000);
-        //armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
+        //Automatic delivery of the pixel to the backdrop
+
+        robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.MIN_VOLTAGE,flipper,0.3);
+        armMotor.moveArmEncoded(ArmPositions.BACK_ARC_DELIVER);
+        sleep(500);
+        robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.DELIVER_PIXEL,flipper,0.6);
         //sleep(1000);
         imuDrive(autonSlow, -6.5, 0);
-        sleep(500);
+        sleep(750);
         servoPoker.moveToPosition((PokerPositions.POKER_FULLIN));
-        sleep(1000);
-        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-        sleep(1000);
+        sleep(2000);  //It takes a while if the poker is full out
+        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
+        sleep(250);
         robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.MIN_VOLTAGE,flipper,0.7);
-        sleep(1000);
+        sleep(500);
     }
 
     @Override

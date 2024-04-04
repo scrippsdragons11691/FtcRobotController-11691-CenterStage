@@ -254,41 +254,23 @@ public class TeleOpMain extends LinearOpMode {
                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
                sleep(500);
             }
+
             // pre set arm and flipper to deliver
+            if (currentGamepad2.x && !previousGamepad2.x)
+            {
+                armMotor.moveArmEncoded(ArmPositions.BACK_ARC_DELIVER);
+                sleep(500);
+                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.DELIVER_PIXEL,flipperMotor,0.8);
+            }
+
+            // pre set to lower arm
             if (currentGamepad2.a && !previousGamepad2.a)
             {
-                armMotor.moveArmEncoded(ArmPositions.BACK_ARC_MAX);
-                sleep(1000);
-                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.DELIVER_PIXEL,flipperMotor,0.8);
+                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
                 sleep(500);
-            }
-/* *****************************************
-            //Open/close claw1
-            if (currentGamepad2.left_bumper)
-            {
-                clawServo1.moveToPosition(GripperPositions.GRIPPER1_OPEN);
-                telemetry.addData("Claw1 Open",clawServo1.getCurrentPosition());
-            }
-            else if (!currentGamepad2.left_bumper & previousGamepad2.left_bumper)
-            {
-                clawServo1.moveToPosition(GripperPositions.GRIPPER1_CLOSED);
-                telemetry.addData("Claw1 Close",clawServo1.getCurrentPosition());
+                robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.MIN_VOLTAGE,flipperMotor,0.8);
             }
 
-            //claw 2 controls
-            if (currentGamepad2.right_bumper)
-            {
-                clawServo2.moveToPosition(GripperPositions.GRIPPER2_OPEN);
-                telemetry.addData("Claw2 Open",clawServo2.getCurrentPosition());
-            }
-            else if (!currentGamepad2.right_bumper & previousGamepad2.right_bumper)
-            {
-                clawServo2.moveToPosition(GripperPositions.GRIPPER2_CLOSED);
-                telemetry.addData("Claw2 Close",clawServo2.getCurrentPosition());
-            }
-
-
-********************************************** */
             //Arm Up/Down
             if (currentGamepad2.left_stick_y != 0)
             {
@@ -297,7 +279,7 @@ public class TeleOpMain extends LinearOpMode {
                 armMotor.stopArmWithHold();
             }
 
-
+            //Quick button to set the height on the arm for driving/pickup
             if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
                 armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
 
@@ -316,7 +298,7 @@ public class TeleOpMain extends LinearOpMode {
             double currentArmPosition = armMotor.getArmEncodedPosition();
 
             //Check for detections
-            lights.switchLight(Light.LED1, LightMode.OFF);
+            //lights.switchLight(Light.LED1, LightMode.OFF);
             //telemetry.clear();
             /*
             if (1 == 0) {

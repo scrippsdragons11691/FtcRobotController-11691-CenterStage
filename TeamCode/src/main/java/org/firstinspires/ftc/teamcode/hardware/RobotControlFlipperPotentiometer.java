@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 
 import org.firstinspires.ftc.teamcode.RobotHardwareMap;
+import java.lang.Math;
 
 public class RobotControlFlipperPotentiometer {
     RobotHardwareMap robotHardwareMap;
@@ -28,15 +29,17 @@ public class RobotControlFlipperPotentiometer {
         Log.println(Log.INFO, "Flipper Encoder: ", String.valueOf(flipperMotor.getCurrentPosition()));
         Log.println(Log.INFO, "Pot: ", String.valueOf(potentiometer.getVoltage()));
 
-        if (getCurrentPotPosition() > flipperPotentiometerPositions.getVoltagePos()){
-            flipperMotor.moveFlipperPowerPot(-power);
+        //Keep moving until we are within 0.05 volts of the target position
+        while(Math.abs(getCurrentPotPosition()-flipperPotentiometerPositions.getVoltagePos()) > 0.05) {
+            if (getCurrentPotPosition() > flipperPotentiometerPositions.getVoltagePos()) {
+                flipperMotor.moveFlipperPowerPot(-power);
+            } else if (getCurrentPotPosition() < flipperPotentiometerPositions.getVoltagePos()) {
+                flipperMotor.moveFlipperPowerPot(power);
+            }
         }
-        else if(getCurrentPotPosition() < flipperPotentiometerPositions.getVoltagePos()){
-            flipperMotor.moveFlipperPowerPot(power);
-        }
-        else{
-            flipperMotor.moveFlipperPowerPot(0);
-        }
+
+        //stop the motor
+        flipperMotor.moveFlipperPowerPot(0);
     }
 
     public double getCurrentPotPosition(){
