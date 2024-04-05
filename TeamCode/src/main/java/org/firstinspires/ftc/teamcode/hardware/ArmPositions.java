@@ -6,6 +6,7 @@ public enum ArmPositions {
     FRONT_ARC_STRAIGHT("FRONT_ARC_STRAIGHT", 10, 0, 0),
     //ZERO is the drive position  70 as a heigh makes sure we move the prop out of the way during auton
     FRONT_ARC_ZERO("FRONT_ARC_ZERO", 110, 0, 0),
+    FIVE_STACK("FIVE_STACK",152,0,0),
     FRONT_ARC_NINETY("FRONT_ARC_NINETY", 443, 0, 0),
     // Value/place value of the arm going up
     FRONT_ARC_TOP("FRONT_ARC_TOP", 1270, 0, 0),
@@ -17,7 +18,7 @@ public enum ArmPositions {
     CLAW2_PICKUP("CLAW2_PICKUP", 240, 0, 0),
     BACK_ARC_MAX("BACK_ARC_MAX", 1800, 0, 0),
     BACK_ARC_MID("BACK_ARC_MID",800,0,0),
-    BACK_ARC_DELIVER("BACK_ARC_DELIVER", 1500, 0, 0),
+    BACK_ARC_DELIVER("BACK_ARC_DELIVER", 1600, 0, 0),
     ;
 
     private final String position;

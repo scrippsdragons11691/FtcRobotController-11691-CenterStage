@@ -72,15 +72,17 @@ public class AutonBlueClose extends AutonBase {
             deliverSpikePixel();
 
             //drive to deliver pixel
-            imuDrive(autonSlow, -5.5, 0);
+            imuDrive(autonSlow, -3.5, 0);
             encoderStrafe(autonSlow, -25, 5);
             imuTurn(autonSlow, 90);
+            imuDrive(autonSlow, -4,0);
 
             //deliver pixel
             deliverBackdropPixel();
 
             //park
-            encoderStrafe(0.5, 15, 5);
+            imuDrive(autonSlow,3,0);
+            encoderStrafe(autonMedium, 15, 5);
             sleep(250);
         }
         //Middle
@@ -96,13 +98,14 @@ public class AutonBlueClose extends AutonBase {
             imuDrive(autonSlow, -8, 0);
             imuTurn(autonSlow, 90);
             imuDrive(autonFast, -29.5, 0);
-            encoderStrafe(autonSlow, -4.5, 5);
+            encoderStrafe(autonSlow, -6.5, 5);
 
             //deploy back pixel
             deliverBackdropPixel();
 
             //park
-            encoderStrafe(0.5,30,5);
+            imuDrive(autonMedium,3,0);
+            encoderStrafe(autonMedium,28,5);
         }
         //Right
         else if(parkingPosition == 3){
@@ -115,15 +118,16 @@ public class AutonBlueClose extends AutonBase {
             deliverSpikePixel();
 
             //drive towards pixel
-            imuDrive(autonFast, -20, 0);
-            encoderStrafe(autonSlow,-6.5,5);
-            imuDrive(autonFast, -14.5, 0);
+            imuDrive(autonMedium, -20, 0);
+            encoderStrafe(autonMedium,-8.5,5);
+            imuDrive(autonMedium, -14.5, 0);
 
             //deposit back pixel
             deliverBackdropPixel();
 
             //slide out of the way
-            encoderStrafe(0.5,33.5,5);
+            imuDrive(autonMedium,3,0);
+            encoderStrafe(autonMedium,36.5,5);
         }
         //Error unable to find target so slide to backdrop
         else{

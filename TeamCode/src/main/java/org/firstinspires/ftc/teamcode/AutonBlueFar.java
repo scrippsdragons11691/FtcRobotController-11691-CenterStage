@@ -60,70 +60,74 @@ public class AutonBlueFar extends AutonBase {
 
         //Set the arm position up to not drag
         armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-        sleep(2000);
         telemetry.addData("Arm Encoder: ", String.valueOf(armMotor.getArmEncodedPosition()));
 
         //Left
         if(parkingPosition == 1)
         {
             imuDrive(autonFast, 29.5, 0);
-            imuTurn(autonSlow, -90);
-            imuDrive(autonSlow, 7, 0);
-            imuDrive(autonSlow, -4, 0);
+            imuTurn(autonMedium, -90);
+            imuDrive(autonMedium, 7, 0);
+            imuDrive(autonMedium, -4, 0);
 
             deliverSpikePixel();
 
             //return to home
-            imuDrive(autonSlow,-5,0);
-            imuTurn(autonSlow,90);
-            imuDrive(autonSlow,-29.5,0);
-            encoderStrafe(autonSlow, -3.5, 5);
+            imuDrive(autonMedium,-5,0);
+            imuTurn(autonMedium,90);
+            imuDrive(autonFast,-29.5,0);
+            encoderStrafe(autonMedium, -4.5, 5);
 
         }
         //Middle
         else if(parkingPosition == 2){
-            imuDrive(autonSlow, 34, 0);
-            sleep(750);
+            imuDrive(autonMedium, 34, 0);
             imuDrive(autonSlow, -3.5, 0);
 
             deliverSpikePixel();
 
-            imuDrive(autonSlow,-29,0);
+            imuDrive(autonMedium,-29,0);
         }
         //Right
         else if(parkingPosition == 3){
-            imuDrive(autonSlow, 29.5, 0);
-            imuTurn(autonSlow, 90);
-            imuDrive(autonSlow, 7, 0);
-            imuDrive(autonSlow, -2.75, 0);
+            imuDrive(autonMedium, 21, 0);
+            encoderStrafe(autonSlow,13,5);
 
+            //move arm down to deliver
             deliverSpikePixel();
 
-            imuDrive(autonSlow, -4.75,0 );
-            imuTurn(autonSlow, -90);
-            imuDrive(autonSlow,-28, 0 );
-            encoderStrafe(autonSlow, 2.5, 5);
-
+            //return to home
+            imuDrive(autonFast,-21,0);
+            encoderStrafe(autonMedium,-13,5);
         }
 
         //Drive to backdrop
         imuDrive(autonFast,12,0);
-        encoderStrafe(autonSlow, 25, 5);
-        imuDrive(autonFast, 38, 0);
+        encoderStrafe(autonMedium, 25, 5);
+        imuDrive(autonFast, 37, 0);
+        armMotor.moveArmEncoded(ArmPositions.FIVE_STACK);
         imuTurn(autonFast,90);
-        imuDrive(autonFast,-96,0);
+
+        //Go for white pixel
+        imuDrive(autonSlow,6,0);
+        servoPoker.moveToPosition(PokerPositions.POKER_FULLOUT);
+        sleep(2000);
+        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+        imuDrive(autonMedium,-6,0);
+
+        imuDrive(autonFast,-100,0);
 
         //Deliver pixel based on parkingposition
         if(parkingPosition == 3) {
-            encoderStrafe(autonSlow, 16, 5);
+            encoderStrafe(autonMedium, 16, 5);
         }
         else if (parkingPosition == 2)
         {
-            encoderStrafe(autonSlow, 23.5, 5);
+            encoderStrafe(autonMedium, 23.5, 5);
         }
         else if (parkingPosition == 1)
         {
-            encoderStrafe(autonSlow, 35,5);
+            encoderStrafe(autonMedium, 33,5);
         }
 
         //Deliver pixel to backdrop

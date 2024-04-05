@@ -58,28 +58,23 @@ public class AutonRedFar extends AutonBase {
 
         //Set the arm position up to not drag
         armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-        sleep(1000);
 
         //Left
         if(parkingPosition == 1){
             imuDrive(autonMedium, 21, 0);
             encoderStrafe(autonSlow,-13,5);
 
-           // imuDrive(autonSlow, 7, 0);
-            //imuDrive(autonSlow, -3, 0);
-
             //move arm down to deliver
             deliverSpikePixel();
 
             //return to home
             imuDrive(autonFast,-21,0);
-            encoderStrafe(autonSlow,13,5);
+            encoderStrafe(autonMedium,13,5);
 
         }
         //Middle
         else if(parkingPosition == 2){
             imuDrive(autonMedium, 34, 0);
-            sleep(750);
             imuDrive(autonSlow, -3, 0);
 
             //move arm down to deliver
@@ -93,35 +88,40 @@ public class AutonRedFar extends AutonBase {
             imuDrive(autonMedium, 29.5, 0);
             imuTurn(autonSlow, 90);
             imuDrive(autonSlow, 7, 0);
-            imuDrive(autonSlow, -3, 0);
+            imuDrive(autonSlow, -4.5, 0);
 
             //move arm down to deliver
-           deliverSpikePixel();
+            deliverSpikePixel();
+
             //Move back home
-            imuDrive(autonMedium,-4,0);
+            imuDrive(autonMedium,-5.5,0);
             imuTurn(autonMedium,-90);
             imuDrive(autonFast,-28.5,0);
+            encoderStrafe(autonMedium,4,5);
         }
         //drive to backboard
         imuDrive(autonFast,12,0);
-        encoderStrafe(autonSlow, -25, 5);
+        encoderStrafe(autonMedium, -25, 5);
         imuDrive(autonFast, 38, 0);
         imuTurn(autonFast,-90);
-        imuDrive(autonFast,-98,0);
+        imuDrive(autonFast,-103,0);
 
         //Deliver pixel based on parkingposition
-        if(parkingPosition == 1) {
-            encoderStrafe(autonSlow, -19, 5);
+        if(parkingPosition == 1)
+        {
+            encoderStrafe(autonMedium, -19, 5);
         }
         else if (parkingPosition == 2)
         {
-            encoderStrafe(autonSlow, -24.5, 5);
+            encoderStrafe(autonMedium, -24.5, 5);
         }
         else if (parkingPosition == 3)
         {
-            encoderStrafe(autonSlow, -36,5);
+            encoderStrafe(autonMedium, -38,5);
         }
+
         deliverBackdropPixel();
+
         //set arm down in the end
         armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
     }

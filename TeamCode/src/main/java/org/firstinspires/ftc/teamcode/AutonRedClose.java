@@ -71,15 +71,16 @@ public class AutonRedClose extends AutonBase {
             deliverSpikePixel();
 
             //drive towards pixel
-            imuDrive(autonFast, -20, 0);
-            encoderStrafe(autonSlow,7.5,5);
-            imuDrive(autonFast, -15.5, 0);
+            imuDrive(autonMedium, -20, 0);
+            encoderStrafe(autonMedium,7.5,5);
+            imuDrive(autonMedium, -15.5, 0);
 
             //deposit back pixel
             deliverBackdropPixel();
 
             //slide out of the way
-            encoderStrafe(0.5,-35,5);
+            imuDrive(autonMedium,3,0);
+            encoderStrafe(autonMedium,-35,5);
         }
         //Middle
         else if(parkingPosition == 2){
@@ -91,18 +92,19 @@ public class AutonRedClose extends AutonBase {
             deliverSpikePixel();
 
             //drive to deliver pixel
-            imuDrive(autonSlow, -8, 0);
-            imuTurn(autonFast, -90);
-            imuDrive(autonSlow, -10, 0);
+            imuDrive(autonMedium, -8, 0);
+            imuTurn(autonMedium, -90);
+            imuDrive(autonMedium, -10, 0);
 
-            encoderStrafe(autonSlow,7,5);
-            imuDrive(autonFast, -20, 0);
+            encoderStrafe(autonMedium,7,5);
+            imuDrive(autonMedium, -23, 0);
 
             //deposit back pixel
             deliverBackdropPixel();
 
             //part out of the way
-            encoderStrafe(.5,-25,5);
+            imuDrive(autonMedium,3,0);
+            encoderStrafe(autonMedium,-29,5);
         }
         //Right
         else if(parkingPosition == 3){
@@ -116,15 +118,16 @@ public class AutonRedClose extends AutonBase {
             deliverSpikePixel();
 
             //drive to deliver pixel
-            imuDrive(autonSlow, -4, 0);
-            encoderStrafe(autonFast, 26.5, 5);
-            imuTurn(autonSlow, -90);
+            imuDrive(autonMedium, -4, 0);
+            encoderStrafe(autonMedium, 26.5, 5);
+            imuTurn(autonMedium, -90);
 
             //deliver pixel
             deliverBackdropPixel();
 
             //park
-            encoderStrafe(autonSlow, -15, 5);
+            imuDrive(autonMedium,3,0);
+            encoderStrafe(autonMedium, -15, 5);
             sleep(250);
         }
         //Error unable to find target so slide to backdrop
