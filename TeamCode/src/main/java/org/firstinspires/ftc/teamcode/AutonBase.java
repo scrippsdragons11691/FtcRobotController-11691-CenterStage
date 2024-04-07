@@ -9,14 +9,18 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
 import org.firstinspires.ftc.teamcode.hardware.FlipperMotorPositions;
+import org.firstinspires.ftc.teamcode.hardware.ArmPotentiometerPositions;
 import org.firstinspires.ftc.teamcode.hardware.Light;
 import org.firstinspires.ftc.teamcode.hardware.LightMode;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlArm;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlArmPotentiometer;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperMotor;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlGripperServos;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlLights;
@@ -78,8 +82,12 @@ public class AutonBase extends LinearOpMode {
     RobotControlPokerServo servoPoker;
     RobotControlArm armMotor;
     RobotControlFlipperMotor flipper;
-
     RobotControlFlipperPotentiometer robotControlFlipperPotentiometer;
+    RobotControlArmPotentiometer robotControlArmPotentiometer;
+
+    public RobotHardwareMap getTheHardwareMap() {
+        return theHardwareMap;
+    }
 
     public void initialize() {
         theHardwareMap  = new RobotHardwareMap(hardwareMap, this);
@@ -88,12 +96,11 @@ public class AutonBase extends LinearOpMode {
 
         theHardwareMap.initialize();
         robotCameraHandler.initialize();
-        clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
-        clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
         servoPoker = new RobotControlPokerServo(theHardwareMap,this,"ServoPoker");
         armMotor = new RobotControlArm(theHardwareMap,this);
         flipper = new RobotControlFlipperMotor(theHardwareMap, this);
         robotControlFlipperPotentiometer = new RobotControlFlipperPotentiometer(theHardwareMap, this, "potentiometer");
+        robotControlArmPotentiometer = new RobotControlArmPotentiometer(theHardwareMap,this,"armpot");
 
         imu = theHardwareMap.chImu;
 
@@ -446,28 +453,40 @@ public class AutonBase extends LinearOpMode {
     public void deliverSpikePixel()
     {
         //move arm down to deliver
-        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.PICK_UP,armMotor,0.5);
         sleep(500);
         servoPoker.moveToPosition((PokerPositions.POKER_1PIX));
         sleep(750);
-        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.DRIVE,armMotor,0.8);
         sleep(500);
     }
 
-    public void deliverBackdropPixel()
-    {
+    public void deliverBackdropPixel() {
         //Automatic delivery of the pixel to the backdrop
 
         robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.MIN_VOLTAGE,flipper,0.3);
-        armMotor.moveArmEncoded(ArmPositions.BACK_ARC_DELIVER);
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.DELIVER,armMotor,0.9);
         sleep(500);
         robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.DELIVER_PIXEL,flipper,0.6);
-        //sleep(1000);
-        imuDrive(autonSlow, -6.5, 0);
+
+        //Check the distance to the backboard
+        double distanceLeft = theHardwareMap.distanceSensorLeft.getDistance(DistanceUnit.INCH);
+        double distanceRight = theHardwareMap.distanceSensorRight.getDistance(DistanceUnit.INCH);
+        double distanceTravel = (distanceLeft + distanceRight) / 2;
+        if (distanceTravel > 5 && distanceTravel < 20)
+        {
+            distanceTravel = distanceTravel - 5;
+            imuDrive(autonSlow,-distanceTravel,0);
+        }
+        else
+        {
+            imuDrive(autonSlow, -6.5, 0);
+        }
+
         sleep(750);
         servoPoker.moveToPosition((PokerPositions.POKER_FULLIN));
         sleep(2000);  //It takes a while if the poker is full out
-        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.PICK_UP,armMotor,0.5);
         sleep(250);
         robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.MIN_VOLTAGE,flipper,0.7);
         sleep(500);

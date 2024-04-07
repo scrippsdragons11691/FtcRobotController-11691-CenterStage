@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
+import org.firstinspires.ftc.teamcode.hardware.ArmPotentiometerPositions;
 import org.firstinspires.ftc.teamcode.hardware.FlipperMotorPositions;
 import org.firstinspires.ftc.teamcode.hardware.FlipperPotentiometerPositions;
 import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
@@ -23,9 +24,6 @@ public class AutonBlueFar extends AutonBase {
         boolean right = true;
 
         initialize();
-
-        //clawServo1.moveToPosition(GripperPositions.GRIPPER1_CLOSED);
-        //clawServo2.moveToPosition(GripperPositions.GRIPPER2_CLOSED);
 
         while (opModeInInit()) {
             //check that the camera is open and working
@@ -59,8 +57,7 @@ public class AutonBlueFar extends AutonBase {
         waitForStart();
 
         //Set the arm position up to not drag
-        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-        telemetry.addData("Arm Encoder: ", String.valueOf(armMotor.getArmEncodedPosition()));
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.DRIVE,armMotor,0.6);
 
         //Left
         if(parkingPosition == 1)
@@ -112,9 +109,13 @@ public class AutonBlueFar extends AutonBase {
         imuDrive(autonSlow,6,0);
         servoPoker.moveToPosition(PokerPositions.POKER_FULLOUT);
         sleep(2000);
-        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.FIVE_STACK,armMotor,0.8);
+        sleep(500);
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.PICK_UP,armMotor,0.8);
         imuDrive(autonMedium,-6,0);
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.DRIVE,armMotor,0.8);
 
+        //Drive close to the backdrop
         imuDrive(autonFast,-100,0);
 
         //Deliver pixel based on parkingposition

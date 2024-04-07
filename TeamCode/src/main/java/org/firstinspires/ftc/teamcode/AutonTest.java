@@ -12,6 +12,7 @@ public class AutonTest extends AutonBase {
         waitForStart();
 
         deliverBackdropPixel();
+
         sleep(5000);
     }
 }

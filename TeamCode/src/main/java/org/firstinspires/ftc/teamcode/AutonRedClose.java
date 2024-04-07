@@ -4,8 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
+import org.firstinspires.ftc.teamcode.hardware.ArmPotentiometerPositions;
 import org.firstinspires.ftc.teamcode.hardware.FlipperMotorPositions;
-import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
+//import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
 import org.firstinspires.ftc.teamcode.hardware.Light;
 import org.firstinspires.ftc.teamcode.hardware.LightMode;
 
@@ -21,9 +22,6 @@ public class AutonRedClose extends AutonBase {
         boolean right = true;
 
         initialize();
-
-        clawServo1.moveToPosition(GripperPositions.GRIPPER1_CLOSED);
-        clawServo2.moveToPosition(GripperPositions.GRIPPER2_CLOSED);
 
         while (opModeInInit()) {
             //check that the camera is open and working
@@ -57,8 +55,10 @@ public class AutonRedClose extends AutonBase {
         waitForStart();
 
         //Set the arm position up to not drag
-        armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+        //armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.DRIVE,armMotor,0.6);
         sleep(1000);
+
 
         //Left
         if(parkingPosition == 1){

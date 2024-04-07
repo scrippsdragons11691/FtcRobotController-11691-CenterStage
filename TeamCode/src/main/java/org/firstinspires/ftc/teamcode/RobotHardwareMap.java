@@ -42,6 +42,9 @@ public class RobotHardwareMap {
     public DcMotorEx backRightMotor;
     public DcMotorEx frontLeftMotor;
     public DcMotorEx frontRightMotor;
+
+    public DistanceSensor distanceSensorLeft;
+    public DistanceSensor distanceSensorRight;
     public DcMotorEx clawRotator;
     public DcMotorEx armMotor;
     public DcMotorEx lifterMotor;
@@ -80,7 +83,10 @@ public class RobotHardwareMap {
         backRightMotor = baseHMap.get(DcMotorEx.class, "RR");
         frontLeftMotor = baseHMap.get(DcMotorEx.class, "FL");
         frontRightMotor = baseHMap.get(DcMotorEx.class, "FR");
-        //lifterMotor = baseHMap.get(DcMotorEx.class, "Lifter");
+
+        //distance sensors
+        distanceSensorLeft = baseHMap.get(DistanceSensor.class,"distanceLeft");
+        distanceSensorRight = baseHMap.get(DistanceSensor.class,"distanceRight");
 
         //Camera
         try {

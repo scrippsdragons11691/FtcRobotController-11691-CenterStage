@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.RobotHardwareMap;
 
 public class RobotControlArm {
 
-
     static final String TAG = "RobotControlArm";
     RobotHardwareMap robotHardwareMap;
     LinearOpMode opMode;
@@ -25,7 +24,7 @@ public class RobotControlArm {
     ControlModes mode = ControlModes.MANUAL;
     ArmPositions armTargetPosition = ArmPositions.UNKNOWN;
     ArmPositions armCurrentPosition = ArmPositions.UNKNOWN;
-
+    RobotControlArmPotentiometer robotControlArmPotentiometer;
 
     public RobotControlArm(RobotHardwareMap robotHardwareMap, LinearOpMode opMode){
         this.opMode = opMode;
@@ -36,6 +35,7 @@ public class RobotControlArm {
     public void initialize(){
         try {
             armMotor = robotHardwareMap.baseHMap.get(DcMotorEx.class, "ARM");
+            robotControlArmPotentiometer = new RobotControlArmPotentiometer(robotHardwareMap, opMode, "armpot");
             armMotor.setPower(0);
             armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             armMotor.setDirection(DcMotorEx.Direction.REVERSE);
@@ -141,15 +141,70 @@ public class RobotControlArm {
         }
     }
 
+    public void stopArmPotWithHold(){
+        if (1==1) //(armInitialized)
+        {
+            //hold code
+            double currentPosition = robotControlArmPotentiometer.getCurrentPotPosition();
+            double holdPower = 0.3;
+
+            //hold position under straight position
+            if (currentPosition > ArmPotentiometerPositions.PICK_UP.getVoltagePos()
+
+                    && currentPosition < ArmPotentiometerPositions.DELIVER.getVoltagePos())
+            {
+                armMotor.setPower(holdPower);
+                Log.d(TAG, "POT holding... " + currentPosition);
+            }
+            else
+            {
+                armMotor.setPower(0);
+                Log.d(TAG, "stopped... " + currentPosition);
+            }
+        }
+    }
+
+
     public void stopArm(){
         if (armInitialized){
             armMotor.setPower(0);
+        }
+    }
+    public void moveArmPowerPot(double power ){
+        mode = ControlModes.MANUAL;
+        armCurrentPosition = ArmPositions.UNKNOWN;
+
+        //only try moving the arm if initialized
+        if (armInitialized) {
+            double armPosition = robotControlArmPotentiometer.getCurrentPotPosition();
+            double powerReducer = 0.75;
+
+            //since we're in manual mode, run without encoder
+            armMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+            //armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+            if (power > 0
+                    && armPosition < ArmPotentiometerPositions.MAX_VOLTAGE.getVoltagePos())
+            {
+                armMotor.setPower(power * powerReducer);
+            }
+            else if (power < 0
+                    && armPosition > ArmPotentiometerPositions.MIN_VOLTAGE.getVoltagePos())
+            {
+                armMotor.setPower(power * powerReducer);
+            }
+            else
+            {
+                //stopArm();
+                stopArmPotWithHold();
+            }
         }
     }
 
     public void addArmTelemetry(){
         if (armInitialized){
             telemetry.addData("armEncoder:", armMotor.getCurrentPosition());
+            telemetry.addData("armPot:", robotControlArmPotentiometer.getCurrentPotPosition());
         } else {
             telemetry.addData("armEncoder:", "Uninitialized!");
         }

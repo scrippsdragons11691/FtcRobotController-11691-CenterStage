@@ -15,7 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.ArmPositions;
 import org.firstinspires.ftc.teamcode.hardware.PokerPositions;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperPotentiometer;
+import org.firstinspires.ftc.teamcode.hardware.RobotControlArmPotentiometer;
 import org.firstinspires.ftc.teamcode.hardware.FlipperPotentiometerPositions;
+import org.firstinspires.ftc.teamcode.hardware.ArmPotentiometerPositions;
 import org.firstinspires.ftc.teamcode.hardware.GripperPositions;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlArm;
 import org.firstinspires.ftc.teamcode.hardware.RobotControlFlipperMotor;
@@ -52,9 +54,8 @@ public class TeleOpMain extends LinearOpMode {
         RobotControlLights lights = new RobotControlLights(theHardwareMap, this);
         RobotControlLifter liftMotor = new RobotControlLifter(theHardwareMap,this);
         RobotControlArm armMotor = new RobotControlArm(theHardwareMap,this);
+        RobotControlArmPotentiometer robotControlArmPotentiometer = new RobotControlArmPotentiometer(theHardwareMap, this, "armpot");
         RobotControlFlipperMotor flipperMotor = new RobotControlFlipperMotor(theHardwareMap, this);
-        //RobotControlGripperServos clawServo1 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw1");
-        //RobotControlGripperServos clawServo2 = new RobotControlGripperServos(theHardwareMap, this, "ServoClaw2");
         RobotControlGripperServos servoLauncher = new RobotControlGripperServos(theHardwareMap,this,"ServoLauncher");
         RobotControlFlipperPotentiometer robotControlFlipperPotentiometer = new RobotControlFlipperPotentiometer(theHardwareMap, this, "potentiometer");
         RobotControlPokerServo servoPoker = new RobotControlPokerServo(theHardwareMap, this, "ServoPoker");
@@ -85,6 +86,7 @@ public class TeleOpMain extends LinearOpMode {
         VisionPortal visionPortal = new VisionPortal.Builder()
                 .addProcessor(aprilTagProcessor)
                 .setCamera(theHardwareMap.frontCamera)
+                .setCameraResolution(new Size(640, 480))
                 .setCameraResolution(new Size(640, 480))
                 .setStreamFormat(VisionPortal.StreamFormat.YUY2)
                 .enableLiveView(true)
@@ -251,9 +253,25 @@ public class TeleOpMain extends LinearOpMode {
             // pre set posistions for arm
             if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down)
             {
-               armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-               sleep(500);
+                //armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+                robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.PICK_UP,armMotor,0.8);
+                //sleep(500);
+                armMotor.stopArmPotWithHold();
             }
+            if (currentGamepad2.dpad_right && !previousGamepad2.dpad_right)
+            {
+                robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.FIVE_STACK,armMotor,0.8);
+                //sleep(500);
+                armMotor.stopArmPotWithHold();
+            }
+            if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up)
+            {
+                //armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
+                robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.DRIVE,armMotor,0.8);
+                //sleep(500);
+                armMotor.stopArmPotWithHold();
+            }
+
 
             // pre set arm and flipper to deliver
             if (currentGamepad2.x && !previousGamepad2.x)
@@ -277,15 +295,6 @@ public class TeleOpMain extends LinearOpMode {
                 armMotor.moveArmPower(-currentGamepad2.left_stick_y);
             } else {
                 armMotor.stopArmWithHold();
-            }
-
-            //Quick button to set the height on the arm for driving/pickup
-            if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
-                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_ZERO);
-
-            } else if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
-                armMotor.moveArmEncoded(ArmPositions.FRONT_ARC_MIN);
-
             }
 
             //Flipper
@@ -339,6 +348,7 @@ public class TeleOpMain extends LinearOpMode {
             telemetry.addData("looptime:", System.currentTimeMillis() - loopTimeStart);
             armMotor.addArmTelemetry();
             flipperMotor.addFlipperTelemetry();
+
             telemetry.addData("Flipper Position:",flipperMotor.getCurrentPosition());
             telemetry.addData("Pot Position:", robotControlFlipperPotentiometer.getCurrentPotPosition());
             telemetry.addData("Pixel Servo:", servoPoker.getCurrentPosition().getServoPos());
