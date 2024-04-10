@@ -94,33 +94,32 @@ public class AutonBlueFar extends AutonBase {
             deliverSpikePixel();
 
             //return to home
-            imuDrive(autonFast,-21,0);
-            encoderStrafe(autonMedium,-13,5);
+            imuDrive(autonFast,-20,0);
+            encoderStrafe(autonMedium,-14,5);
         }
 
         //Drive to backdrop
         imuDrive(autonFast,12,0);
         encoderStrafe(autonMedium, 25, 5);
-        imuDrive(autonFast, 37, 0);
+        imuDrive(autonMedium, 39.42, 0);
         armMotor.moveArmEncoded(ArmPositions.FIVE_STACK);
         imuTurn(autonFast,90);
 
         //Go for white pixel
-        imuDrive(autonSlow,6,0);
-        servoPoker.moveToPosition(PokerPositions.POKER_FULLOUT);
-        sleep(2000);
         robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.FIVE_STACK,armMotor,0.8);
+        imuDrive(autonSlow,5.75,0);
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.FIVE_STACK_PICKUP,armMotor,0.8);
+        servoPoker.moveToPosition(PokerPositions.POKER_FULLOUT);
         sleep(500);
-        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.PICK_UP,armMotor,0.8);
         imuDrive(autonMedium,-6,0);
         robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.DRIVE,armMotor,0.8);
 
         //Drive close to the backdrop
-        imuDrive(autonFast,-100,0);
+        imuDrive(autonFast,-98,0);
 
         //Deliver pixel based on parkingposition
         if(parkingPosition == 3) {
-            encoderStrafe(autonMedium, 16, 5);
+            encoderStrafe(autonMedium, 19, 5);
         }
         else if (parkingPosition == 2)
         {

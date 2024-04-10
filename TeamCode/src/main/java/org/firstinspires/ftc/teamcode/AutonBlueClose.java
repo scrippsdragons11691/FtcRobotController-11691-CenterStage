@@ -59,29 +59,28 @@ public class AutonBlueClose extends AutonBase {
         robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.DRIVE,armMotor,0.6);
         sleep(1000);
 
-
         //Left
         if(parkingPosition == 1){
             imuDrive(autonFast, 5, 0);
-            encoderStrafe(autonSlow,-11.75,5);
-            imuDrive(autonSlow, 25, 0);
-            imuDrive(autonSlow,-6,0);
+            encoderStrafe(autonMedium,-11.75,5);
+            imuDrive(autonMedium, 25, 0);
+            imuDrive(autonMedium,-6,0);
 
             //move arm down to deliver
             deliverSpikePixel();
 
             //drive to deliver pixel
-            imuDrive(autonSlow, -3.5, 0);
-            encoderStrafe(autonSlow, -25, 5);
-            imuTurn(autonSlow, 90);
-            imuDrive(autonSlow, -4,0);
+            imuDrive(autonMedium, -5.5, 0);
+            encoderStrafe(autonMedium, -22, 5);
+            imuTurn(autonMedium, 90);
+            imuDrive(autonMedium, -4,0);
 
             //deliver pixel
             deliverBackdropPixel();
 
             //park
-            imuDrive(autonSlow,3,0);
-            encoderStrafe(autonMedium, 15, 5);
+            imuDrive(autonMedium,3,0);
+            encoderStrafe(autonMedium, 24, 5);
             sleep(250);
         }
         //Middle

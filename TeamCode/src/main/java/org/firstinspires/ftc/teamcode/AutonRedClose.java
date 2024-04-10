@@ -59,13 +59,12 @@ public class AutonRedClose extends AutonBase {
         robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.DRIVE,armMotor,0.6);
         sleep(1000);
 
-
         //Left
         if(parkingPosition == 1){
-            imuDrive(autonSlow, 28.5, 0);
-            imuTurn(autonSlow, -90);
-            imuDrive(autonSlow, 7, 0);
-            imuDrive(autonSlow, -3, 0);
+            imuDrive(autonMedium, 28.5, 0);
+            imuTurn(autonMedium, -90);
+            imuDrive(autonMedium, 7, 0);
+            imuDrive(autonMedium, -3, 0);
 
             //move arm down to deliver
             deliverSpikePixel();
@@ -84,9 +83,8 @@ public class AutonRedClose extends AutonBase {
         }
         //Middle
         else if(parkingPosition == 2){
-            imuDrive(autonSlow, 36, 0);
-            //sleep(750);
-            imuDrive(autonSlow, -5, 0);
+            imuDrive(autonMedium, 36, 0);
+            imuDrive(autonMedium, -5, 0);
 
             //move arm down to deliver
             deliverSpikePixel();
@@ -108,11 +106,10 @@ public class AutonRedClose extends AutonBase {
         }
         //Right
         else if(parkingPosition == 3){
-            imuDrive(autonSlow, 5, 0);
-            encoderStrafe(autonSlow,13.5,5);
-            //imuTurn(0.4, 61);
-            imuDrive(autonFast, 25, 0);
-            imuDrive(autonSlow,-6,0);
+            imuDrive(autonMedium, 5, 0);
+            encoderStrafe(autonMedium,13.5,5);
+            imuDrive(autonMedium, 25, 0);
+            imuDrive(autonMedium,-6,0);
 
             //move arm down to deliver
             deliverSpikePixel();

@@ -466,7 +466,7 @@ public class AutonBase extends LinearOpMode {
 
         robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.MIN_VOLTAGE,flipper,0.3);
         robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.DELIVER,armMotor,0.9);
-        sleep(500);
+//       sleep(500);
         robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.DELIVER_PIXEL,flipper,0.6);
 
         //Check the distance to the backboard
@@ -476,18 +476,18 @@ public class AutonBase extends LinearOpMode {
         if (distanceTravel > 5 && distanceTravel < 20)
         {
             distanceTravel = distanceTravel - 5;
-            imuDrive(autonSlow,-distanceTravel,0);
+            imuDrive(autonMedium,-distanceTravel,0);
         }
         else
         {
-            imuDrive(autonSlow, -6.5, 0);
+            //imuDrive(autonSlow, -6.5, 0);
         }
 
-        sleep(750);
+        sleep(250);
         servoPoker.moveToPosition((PokerPositions.POKER_FULLIN));
         sleep(2000);  //It takes a while if the poker is full out
-        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.PICK_UP,armMotor,0.5);
-        sleep(250);
+        robotControlArmPotentiometer.moveToPosition(ArmPotentiometerPositions.PICK_UP,armMotor,0.6);
+        //sleep(250);
         robotControlFlipperPotentiometer.moveToPosition(FlipperPotentiometerPositions.MIN_VOLTAGE,flipper,0.7);
         sleep(500);
     }
